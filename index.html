@@ -6,130 +6,258 @@
 <meta name="theme-color" content="#fbfdff">
 <meta name="description" content="Create, reshape, and export sharp-edged gradient backgrounds.">
 <title>Sharped — Sharp edged gradients</title>
-<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='30' fill='%23e5f6ff'/%3E%3Cpath d='M12 51 51 12a30 30 0 0 1-39 39Z' fill='%237dd3fc'/%3E%3C/svg%3E">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cpath d='M8 54 54 8a32 32 0 0 1-46 46Z' fill='%237dd3fc'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@400;500&family=Geist:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20,400,0,0" rel="stylesheet">
 <style>
 :root{
-  font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
-  color:#1c2327;background:#f3f4f2;font-synthesis:none;
-  --page:#f3f4f2;--surface:#fafbf9;--line:#dde2df;--line-soft:#e9ece9;
-  --text:#1c2327;--muted:#7a8480;--control:#f1f3f1;--active:#20292d;
+  color-scheme:light;
+  --bg:#f0f9ff;
+  --ink:#171717;
+  --muted:#64748b;
+  --line:#dbe2ea;
+  --card:#ffffff;
+  --coral:#fda89a;
+  --coral-soft:#fff1ee;
+  --coral-strong:#b94f42;
+  --blue:#7dd3fc;
+  --side-panel-width:100vw;
+  --drawer-shift:-100vw;
+  --drawer-ease:cubic-bezier(.22,1,.36,1);
+  --drawer-sweep:cubic-bezier(.45,0,.55,1);
+  font-family:Geist,system-ui,sans-serif;
+  font-synthesis:none;
 }
 *{box-sizing:border-box}
-html,body{margin:0;min-height:100%;background:var(--page);color:var(--text)}
+html,body{margin:0;min-height:100%;background:var(--bg);color:var(--ink)}
 body{min-height:100vh;overflow:hidden}
 button,select,input{font:inherit}
 button{cursor:pointer}
-button:focus-visible,select:focus-visible,input:focus-visible,summary:focus-visible,.stage:focus-visible{outline:2px solid #5fc5ed;outline-offset:2px}
-.app{height:100dvh;padding:18px;display:grid;grid-template-rows:30px minmax(0,1fr);gap:14px}
-.brand{display:flex;align-items:center;gap:8px;min-width:0}
-.logo{width:26px;height:26px;flex:0 0 26px;border-radius:50%;background:linear-gradient(135deg,#f1fbff 0 48%,#bceaff 48% 100%)}
-.brand-copy h1{font-size:18px;line-height:26px;letter-spacing:-.04em;margin:0;font-weight:650}
-.theme-toggle{margin-left:auto;width:30px;height:30px;padding:0;border:1px solid var(--line);border-radius:50%;background:var(--surface);color:var(--text);display:grid;place-items:center}
-.theme-toggle:hover{background:var(--control)}
-.theme-icon{line-height:1}
-#themeLabel{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)}
-.workspace{min-height:0;display:grid;grid-template-columns:minmax(0,1fr) clamp(252px,21vw,292px);gap:16px}
-.canvas-column,.preview-frame,.stage{min-height:0;height:100%}
-.preview-frame{padding:1px;background:var(--line);border-radius:12px;overflow:hidden}
-.stage{position:relative;border-radius:11px;overflow:hidden;touch-action:none;cursor:grab}
+:where(button,select,input,.stage):focus-visible{outline:2px solid #0f766e;outline-offset:3px}
+.material-symbols-outlined{font-family:"Material Symbols Outlined";font-weight:normal;font-style:normal;font-size:18px;line-height:1;letter-spacing:normal;text-transform:none;display:inline-block;white-space:nowrap;word-wrap:normal;direction:ltr;-webkit-font-feature-settings:"liga";-webkit-font-smoothing:antialiased}
+.app{min-height:100vh}
+.brand{position:fixed;z-index:8;top:24px;left:24px;display:flex;align-items:center;gap:8px}
+.brand .logo{width:20px;height:20px;overflow:visible;fill:var(--blue)}
+.brand h1{margin:0;font:600 18px/1 Geist,system-ui,sans-serif;letter-spacing:-.035em}
+.site-content{height:100dvh;padding:62px 24px 96px;transition:transform 900ms var(--drawer-sweep),opacity 560ms var(--drawer-ease),filter 460ms ease-out}
+.canvas-column,.preview-frame,.stage{height:100%;min-height:0}
+.preview-frame{padding:1px;border:1px solid rgb(23 23 23 / 10%);border-radius:8px;background:var(--card);box-shadow:0 3px 12px rgb(15 23 42 / 6%)}
+.stage{position:relative;overflow:hidden;border-radius:7px;touch-action:none;cursor:grab}
 .stage svg{display:block;width:100%;height:100%}
 .stage.dragging{cursor:grabbing}
-.stage .edge-hit{stroke:transparent;stroke-width:50;fill:none;cursor:pointer}
-.stage .edge-guide{stroke:#4c6975;stroke-width:1.5;stroke-dasharray:5 8;opacity:0;pointer-events:none;transition:opacity .22s ease}
-.stage .edge-guide.selected{stroke-width:2;stroke-dasharray:none;opacity:0}
-.stage .edge-handle{fill:#f8fcfd;stroke:#38515b;stroke-width:1.5;opacity:0;pointer-events:none;transition:opacity .22s ease}
-.stage:hover .edge-guide{opacity:.13}
-.stage:hover .edge-guide.selected,.stage:focus-visible .edge-guide.selected,.stage.dragging .edge-guide.selected{opacity:.7}
-.stage:hover .edge-handle.selected,.stage:focus-visible .edge-handle.selected,.stage.dragging .edge-handle.selected{opacity:.9}
+.stage .edge-hit{stroke:transparent;stroke-width:52;fill:none;cursor:pointer}
+.stage .edge-guide{stroke:var(--coral-strong);stroke-width:1.5;stroke-dasharray:5 8;opacity:0;pointer-events:none;transition:opacity 180ms ease}
+.stage .edge-guide.selected{stroke-width:2;stroke-dasharray:none}
+.stage .edge-handle{fill:var(--coral-soft);stroke:var(--coral-strong);stroke-width:1.5;opacity:0;pointer-events:none;transition:opacity 180ms ease}
+.stage:hover .edge-guide{opacity:.12}
+.stage:hover .edge-guide.selected,.stage:focus-visible .edge-guide.selected,.stage.dragging .edge-guide.selected{opacity:.78}
+.stage:hover .edge-handle.selected,.stage:focus-visible .edge-handle.selected,.stage.dragging .edge-handle.selected{opacity:1}
 .status{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)}
-.panel{height:100%;overflow:auto;padding:20px;background:var(--surface);border:1px solid var(--line);border-radius:14px;color:var(--text);scrollbar-width:thin}
-.control{padding:21px 0 0}
-.control-label{display:block;margin-bottom:12px;font-size:12px;line-height:1;font-weight:560;color:var(--text)}
-.palette-row{display:grid;grid-template-columns:repeat(7,1fr);align-items:center;gap:7px}
-.swatch,.custom{width:27px;height:27px;border-radius:50%;justify-self:center;position:relative}
-.swatch{border:1px solid var(--line);padding:0;box-shadow:none;transition:transform .16s ease}
+
+.views-panel-backdrop{
+  position:fixed;z-index:10;right:0;bottom:0;left:0;height:116px;
+  background:linear-gradient(to bottom,rgb(240 249 255 / 0) 0%,rgb(240 249 255 / 72%) 58%,rgb(240 249 255 / 100%) 100%);
+  pointer-events:none;transition:opacity 180ms ease
+}
+.views-panel{
+  position:fixed;z-index:11;bottom:32px;left:50%;display:flex;align-items:center;gap:6px;
+  width:min(440px,calc(100% - 64px));min-height:40px;padding:8px;border:1px solid transparent;
+  border-radius:8px;background:#fff;box-shadow:0 3px 12px rgb(15 23 42 / 10%);
+  transform:translateX(-50%);transition:opacity 180ms ease,transform 180ms ease
+}
+.command-navigation{display:grid;grid-template-columns:repeat(3,1fr);gap:4px;min-width:0;flex:1}
+.command-navigation button,.quick-create,.theme-toggle{
+  min-height:32px;border:1px solid transparent;border-radius:6px;background:transparent;color:#334155;
+  font:500 14px/1 Geist,system-ui,sans-serif;transition:background 160ms ease,border-color 160ms ease,color 160ms ease
+}
+.command-navigation button:hover,.command-navigation button[aria-expanded="true"],.quick-create:hover,.theme-toggle:hover{
+  border-color:var(--coral);background:var(--coral-soft);color:#171717
+}
+.views-panel-divider{width:1px;height:24px;background:#cbd5e1}
+.quick-create,.theme-toggle{flex:0 0 32px;width:32px;padding:0;display:grid;place-items:center}
+.theme-toggle{position:relative}
+.theme-label,#themeLabel{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)}
+
+.drawer-backdrop{
+  position:fixed;z-index:18;inset:0;background:rgb(23 23 23 / 8%);opacity:0;visibility:hidden;
+  pointer-events:none;transition:opacity 460ms ease,visibility 0s linear 620ms
+}
+.control-drawer{
+  position:fixed;z-index:20;top:0;right:0;bottom:0;width:var(--side-panel-width);overflow-y:auto;padding:24px;
+  border:0;border-left:1px solid #d8e0e8;border-radius:0;background:var(--card);
+  box-shadow:-20px 0 52px rgb(15 23 42 / 18%);visibility:hidden;transform:translateX(100%);pointer-events:none;
+  transition:transform 760ms var(--drawer-ease),visibility 0s linear 760ms
+}
+body.drawer-open .control-drawer{visibility:visible;transform:translateX(0);pointer-events:auto;transition:transform 900ms var(--drawer-sweep),visibility 0s linear 0s}
+body.drawer-open .drawer-backdrop{opacity:1;visibility:visible;pointer-events:auto;transition:opacity 460ms ease,visibility 0s linear 0s}
+body.drawer-open .site-content{transform:translateX(var(--drawer-shift));opacity:.56;filter:grayscale(.25) sepia(.18) hue-rotate(305deg) saturate(.88) brightness(.94);pointer-events:none}
+body.drawer-open .views-panel,body.drawer-open .views-panel-backdrop{opacity:0;pointer-events:none}
+.drawer-header{display:flex;align-items:center;justify-content:space-between;gap:16px;padding-bottom:16px;border-bottom:1px solid var(--line)}
+.drawer-lockup{display:flex;align-items:center;gap:8px}
+.drawer-mark{width:18px;height:18px;fill:var(--blue)}
+.drawer-title{margin:0;font:600 16px/1.25 Geist,system-ui,sans-serif}
+.icon-button{width:32px;height:32px;padding:0;display:grid;place-items:center;border:1px solid var(--line);border-radius:8px;background:transparent;color:var(--ink)}
+.icon-button:hover{border-color:var(--coral);background:var(--coral-soft);color:#171717}
+.drawer-content{width:min(860px,100%);padding:8px 0 48px;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));column-gap:40px}
+.drawer-section{min-width:0;padding:28px 0;border-bottom:1px solid var(--line)}
+.drawer-section:nth-child(-n+2){border-top:0}
+.eyebrow{margin:0 0 8px;color:var(--muted);font:500 12px/1 Geist Mono,ui-monospace,monospace;text-transform:uppercase;letter-spacing:.08em}
+.drawer-section h3{margin:0 0 18px;font:600 22px/1.15 Geist,system-ui,sans-serif;letter-spacing:-.025em}
+.section-heading{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:18px}
+.section-heading h3{margin:0}
+.palette-row{display:grid;grid-template-columns:repeat(7,32px);align-items:center;gap:10px}
+.swatch,.custom{width:32px;height:32px;border-radius:50%;position:relative}
+.swatch{border:1px solid var(--line);padding:0;box-shadow:none;transition:transform 160ms ease}
 .swatch:hover{transform:scale(1.08)}
-.swatch.selected:after{content:"";position:absolute;inset:-4px;border:1px solid var(--muted);border-radius:50%}
+.swatch.selected:after{content:"";position:absolute;inset:-4px;border:1px solid var(--coral);border-radius:50%}
 .custom{overflow:hidden;border:1px solid var(--line);background:conic-gradient(#ff6868,#ffc85d,#61df9e,#6dc8ff,#ab8dff,#ff6868)}
-.custom input{position:absolute;inset:0;opacity:0;width:100%;height:100%;cursor:pointer}
+.custom input{position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:pointer}
 .custom.selected:after{content:"";position:absolute;inset:3px;border:1px solid #fff;border-radius:50%;pointer-events:none}
-.depth-row{display:grid;grid-template-columns:1fr 34px;align-items:center;gap:10px;margin-top:16px}
-.depth-row input{width:100%;accent-color:var(--active)}
-.depth-value{text-align:right;font-size:10px;font-variant-numeric:tabular-nums;color:var(--muted)}
-.style-picker{display:grid;grid-template-columns:1fr 1fr;gap:6px}
-.style-picker button,.line-picker button{height:34px;border:1px solid var(--line);background:transparent;color:var(--muted);border-radius:8px;font-size:11px;font-weight:540}
-.style-picker button:hover,.line-picker button:hover{background:var(--control)}
-.style-picker button.selected,.line-picker button.selected{background:var(--active);border-color:var(--active);color:#fff}
-.action{width:100%;height:40px;border-radius:9px;font-size:12px;font-weight:600}
-.action.creative{border:0;background:var(--active);color:#fff}
-.action.creative span{display:inline-block;margin-right:7px;font-size:15px;font-weight:400}
-.action.creative:hover{filter:brightness(1.08)}
-.action.download{margin-top:14px;border:1px solid var(--line);background:transparent;color:var(--text)}
-.action.download:hover{background:var(--control)}
-.action.download span{float:right}
-.disclosure{border-top:1px solid var(--line-soft);margin-top:20px;padding-top:14px}
-.disclosure summary{list-style:none;cursor:pointer;font-size:11px;font-weight:540;color:var(--text);display:flex;align-items:center;justify-content:space-between}
-.disclosure summary::-webkit-details-marker{display:none}
-.disclosure summary:after{content:"+";color:var(--muted);font-size:14px;font-weight:400}
-.disclosure[open] summary:after{content:"−"}
-.disclosure summary span{margin-left:auto;margin-right:10px;color:var(--muted);font-size:9px;font-weight:500}
-.disclosure-body{padding-top:12px}
-.line-picker{display:grid;grid-template-columns:1fr 1fr;gap:6px}
-.text-action{margin-top:10px;padding:0;border:0;background:none;color:var(--muted);font-size:10px;text-decoration:underline;text-underline-offset:3px}
-.export-fields{display:grid;gap:10px}
-.select-wrap label{display:block;margin-bottom:5px;color:var(--muted);font-size:9px;font-weight:500}
-.select-wrap select{width:100%;height:34px;border:1px solid var(--line);background:var(--control);border-radius:8px;padding:0 9px;color:var(--text);font-size:10px}
-.dark{--page:#111416;--surface:#191d20;--line:#2b3236;--line-soft:#272d31;--text:#e6eaec;--muted:#8d989e;--control:#21272b;--active:#e9eef0;color-scheme:dark}
-.dark .style-picker button.selected,.dark .line-picker button.selected{color:#172027}
-.dark .action.creative{color:#172027}
-.dark .preview-frame{background:#2b3236}
-@media(prefers-reduced-motion:reduce){*,*:before,*:after{scroll-behavior:auto!important;transition:none!important}}
-@media(max-width:760px){
-  body{overflow:auto}
-  .app{height:auto;min-height:100dvh;padding:14px;grid-template-rows:30px auto}
-  .workspace{display:block}
-  .canvas-column{height:62dvh;min-height:390px}
-  .panel{height:auto;margin-top:14px;padding:18px}
-  .palette-row{max-width:280px}
+.depth-row{display:grid;grid-template-columns:auto minmax(120px,1fr) 42px;align-items:center;gap:12px;margin-top:24px}
+.depth-row label,.select-wrap label{color:var(--muted);font:500 14px/1 Geist,system-ui,sans-serif}
+.depth-row input{width:100%;accent-color:var(--coral-strong)}
+.depth-value,.export-meta{color:var(--muted);font:500 12px/1 Geist Mono,ui-monospace,monospace;text-align:right;font-variant-numeric:tabular-nums}
+.style-picker,.line-picker{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.style-picker button,.line-picker button{
+  min-height:40px;padding:0 12px;border:1px solid var(--line);border-radius:6px;background:transparent;color:var(--ink);
+  font:500 14px/1 Geist,system-ui,sans-serif
+}
+.style-picker button:hover,.line-picker button:hover{border-color:var(--coral);background:var(--coral-soft)}
+.style-picker button.selected,.line-picker button.selected{border-color:var(--coral);background:var(--coral-soft);color:#171717;font-weight:600}
+.coral-action,.download-button{
+  min-height:40px;display:inline-flex;align-items:center;justify-content:center;gap:7px;padding:0 14px;
+  border:1px solid var(--coral);border-radius:6px;background:var(--coral-soft);color:#171717;font:600 14px/1 Geist,system-ui,sans-serif
+}
+.coral-action:hover,.download-button:hover{background:var(--coral)}
+.text-action{padding:0;border:0;background:none;color:var(--coral-strong);font:500 14px/1 Geist,system-ui,sans-serif}
+.text-action:hover{text-decoration:underline;text-underline-offset:3px}
+.export-fields{display:grid;grid-template-columns:minmax(0,1fr) minmax(150px,.55fr);gap:12px}
+.select-wrap label{display:block;margin-bottom:7px}
+.select-wrap select{width:100%;height:40px;padding:0 10px;border:1px solid var(--line);border-radius:6px;background:#fff;color:#171717;font:500 14px/1 Geist,system-ui,sans-serif}
+.download-button{width:100%;margin-top:14px;justify-content:space-between}
+.export-meta{display:block;margin-top:10px;text-align:left}
+
+.dark{
+  color-scheme:dark;--bg:#0f172a;--ink:#f8fafc;--muted:#cbd5e1;--line:#475569;--card:#111827
+}
+.dark .views-panel{background:#111827}
+.dark .views-panel-backdrop{background:linear-gradient(to bottom,rgb(15 23 42 / 0) 0%,rgb(15 23 42 / 72%) 58%,rgb(15 23 42 / 100%) 100%)}
+.dark .command-navigation button,.dark .quick-create,.dark .theme-toggle{color:#e2e8f0}
+.dark .preview-frame{border-color:#334155;background:#111827}
+.dark .select-wrap select{background:#1f2937;color:#f8fafc}
+.dark body.drawer-open .site-content{filter:grayscale(.25) sepia(.2) hue-rotate(305deg) saturate(.68) brightness(.72)}
+.dark .style-picker button.selected,.dark .line-picker button.selected{color:#171717}
+
+@media(min-width:768px){
+  :root{--side-panel-width:80vw;--drawer-shift:-20vw}
+}
+@media(max-width:900px){
+  .drawer-content{grid-template-columns:1fr}
+  .drawer-section{border-bottom:1px solid var(--line)}
+}
+@media(max-width:640px){
+  .brand{top:18px;left:18px}
+  .site-content{padding:54px 14px 90px}
+  .views-panel{bottom:20px;width:calc(100% - 28px)}
+  .command-navigation button{font-size:13px;padding:0 5px}
+  .control-drawer{padding:18px}
+  .drawer-content{display:block}
+  .palette-row{grid-template-columns:repeat(7,1fr);gap:7px}
+  .swatch,.custom{width:30px;height:30px}
+  .section-heading{align-items:flex-start;flex-direction:column}
+  .coral-action{width:100%}
+  .export-fields{grid-template-columns:1fr}
+}
+@media(prefers-reduced-motion:reduce){
+  *,*:before,*:after{scroll-behavior:auto!important;transition:none!important;animation:none!important}
 }
 </style>
 </head>
 <body>
 <main class="app">
-  <header class="brand">
-    <div class="logo" aria-hidden="true"></div>
-    <div class="brand-copy"><h1>Sharped</h1></div>
-    <button type="button" class="theme-toggle" id="themeToggle" aria-pressed="false"><span class="theme-icon" aria-hidden="true">◐</span><span id="themeLabel">Dark</span></button>
+  <header class="brand" aria-label="Sharped">
+    <svg class="logo" viewBox="0 0 64 64" aria-hidden="true"><path d="M8 54 54 8a32 32 0 0 1-46 46Z"/></svg>
+    <h1>Sharped</h1>
   </header>
-  <div class="workspace">
+
+  <div class="site-content" id="siteContent">
     <section class="canvas-column" aria-label="Gradient canvas">
       <div class="preview-frame"><div id="stage" class="stage" tabindex="0" aria-label="Gradient preview. Select a plane, then drag anywhere to move it."><svg id="preview" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 600" preserveAspectRatio="none" role="img" aria-label="Sharp-edged gradient"></svg></div></div>
       <span id="status" class="status" role="status" aria-live="polite"></span>
     </section>
-    <aside class="panel" aria-label="Gradient controls">
-      <button type="button" class="action creative" id="regenerate"><span aria-hidden="true">↻</span> New composition</button>
-      <section class="control colour-control"><span class="control-label">Atmosphere</span><div class="palette-row" id="paletteRow" role="group" aria-label="Gradient colours"></div><div class="depth-row"><input id="depth" type="range" min="0" max="100" value="28" aria-label="Atmosphere intensity"><output id="depthValue" class="depth-value">28%</output></div></section>
-      <section class="control"><span class="control-label">Structure</span><div class="style-picker" id="stylePicker" role="group" aria-label="Spatial structure"><button type="button" class="selected" data-style="prism">Quiet</button><button type="button" data-style="fold">Folded</button><button type="button" data-style="fan">Focused</button><button type="button" data-style="slice">Expansive</button></div></section>
-      <details class="disclosure"><summary>Edit geometry</summary><div class="disclosure-body"><div class="line-picker" id="linePicker" role="group" aria-label="Selected gradient line"><button type="button" class="selected" data-line="0" aria-pressed="true">Plane 1</button><button type="button" data-line="1" aria-pressed="false">Plane 2</button></div><button type="button" class="text-action" id="reset">Reset geometry</button></div></details>
-      <details class="disclosure"><summary>Export settings <span id="exportMeta">PNG</span></summary><div class="disclosure-body export-fields"><div class="select-wrap"><label for="size">Canvas</label><select id="size"><option value="social">Social landscape · 1200 × 630</option><option value="square">Social square · 1080 × 1080</option><option value="portrait">Social portrait · 1080 × 1350</option><option value="story">Story · 1080 × 1920</option><option value="substack">Substack cover · 1200 × 630</option><option value="medium">Medium wide · 1200 × 675</option><option value="wallpaper">Desktop · 1920 × 1080</option></select></div><div class="select-wrap"><label for="format">Format</label><select id="format"><option value="png">PNG</option><option value="jpeg">JPG</option><option value="webp">WebP</option><option value="svg">SVG</option></select></div></div></details>
-      <button type="button" class="action download" id="download">Download <span aria-hidden="true">↓</span></button>
-    </aside>
   </div>
+
+  <div class="drawer-backdrop" id="drawerBackdrop" aria-hidden="true"></div>
+  <aside class="control-drawer" id="controlDrawer" aria-hidden="true" aria-labelledby="drawerTitle">
+    <header class="drawer-header">
+      <div class="drawer-lockup">
+        <svg class="drawer-mark" viewBox="0 0 64 64" aria-hidden="true"><path d="M8 54 54 8a32 32 0 0 1-46 46Z"/></svg>
+        <h2 class="drawer-title" id="drawerTitle">Controls</h2>
+      </div>
+      <button type="button" class="icon-button drawer-close" id="drawerClose" aria-label="Close drawer"><span class="material-symbols-outlined" aria-hidden="true">close</span></button>
+    </header>
+    <div class="drawer-content">
+      <section class="drawer-section" id="controlsSection">
+        <p class="eyebrow">Controls</p>
+        <h3>Atmosphere</h3>
+        <div class="palette-row" id="paletteRow" role="group" aria-label="Gradient colours"></div>
+        <div class="depth-row"><label for="depth">Intensity</label><input id="depth" type="range" min="0" max="100" value="28" aria-label="Atmosphere intensity"><output id="depthValue" class="depth-value">28%</output></div>
+      </section>
+
+      <section class="drawer-section" id="patternsSection">
+        <p class="eyebrow">Design patterns</p>
+        <div class="section-heading"><h3>Structure</h3><button type="button" class="coral-action" id="regenerate"><span class="material-symbols-outlined" aria-hidden="true">refresh</span>New composition</button></div>
+        <div class="style-picker" id="stylePicker" role="group" aria-label="Spatial structure"><button type="button" class="selected" data-style="prism">Quiet</button><button type="button" data-style="fold">Folded</button><button type="button" data-style="fan">Focused</button><button type="button" data-style="slice">Expansive</button></div>
+      </section>
+
+      <section class="drawer-section" id="geometrySection">
+        <p class="eyebrow">Geometry</p>
+        <div class="section-heading"><h3>Active plane</h3><button type="button" class="text-action" id="reset">Reset</button></div>
+        <div class="line-picker" id="linePicker" role="group" aria-label="Selected gradient line"><button type="button" class="selected" data-line="0" aria-pressed="true">Plane 1</button><button type="button" data-line="1" aria-pressed="false">Plane 2</button></div>
+      </section>
+
+      <section class="drawer-section export-section" id="exportSection">
+        <p class="eyebrow">Export</p>
+        <h3>Output</h3>
+        <div class="export-fields"><div class="select-wrap"><label for="size">Canvas</label><select id="size"><option value="social">Social landscape · 1200 × 630</option><option value="square">Social square · 1080 × 1080</option><option value="portrait">Social portrait · 1080 × 1350</option><option value="story">Story · 1080 × 1920</option><option value="substack">Substack cover · 1200 × 630</option><option value="medium">Medium wide · 1200 × 675</option><option value="wallpaper">Desktop · 1920 × 1080</option></select></div><div class="select-wrap"><label for="format">Format</label><select id="format"><option value="png">PNG</option><option value="jpeg">JPG</option><option value="webp">WebP</option><option value="svg">SVG</option></select></div></div>
+        <button type="button" class="download-button" id="download">Download <span class="material-symbols-outlined" aria-hidden="true">download</span></button>
+        <span id="exportMeta" class="export-meta">PNG · 1200 × 630</span>
+      </section>
+    </div>
+  </aside>
+
+  <div class="views-panel-backdrop" aria-hidden="true"></div>
+  <aside class="views-panel" aria-label="Sharped controls and appearance">
+    <nav class="command-navigation" aria-label="Editor sections">
+      <button type="button" data-drawer-target="controlsSection" aria-expanded="false" aria-controls="controlDrawer">Controls</button>
+      <button type="button" data-drawer-target="patternsSection" aria-expanded="false" aria-controls="controlDrawer">Patterns</button>
+      <button type="button" data-drawer-target="exportSection" aria-expanded="false" aria-controls="controlDrawer">Export</button>
+    </nav>
+    <span class="views-panel-divider" aria-hidden="true"></span>
+    <button type="button" class="quick-create" id="quickRegenerate" aria-label="Generate a new composition"><span class="material-symbols-outlined" aria-hidden="true">refresh</span></button>
+    <button type="button" class="theme-toggle" id="themeToggle" aria-pressed="false" aria-label="Use dark theme"><span class="material-symbols-outlined theme-icon" aria-hidden="true">contrast</span><span id="themeLabel">Dark</span></button>
+  </aside>
 </main>
 <script>
 (()=>{
  const $=id=>document.getElementById(id),stage=$('stage'),preview=$('preview'),status=$('status');
- const presets=[['Blue','#38bdf8'],['Purple','#a855f7'],['White','#f8fafc'],['Green','#4ade80'],['Red','#fb7185'],['Black','#111827']];
+ const presets=[['Light blue','#7dd3fc'],['Coral','#fda89a'],['Lilac','#a78bfa'],['Mint','#86efac'],['White','#f8fafc'],['Ink','#171717']];
  const sizes={social:[1200,630],square:[1080,1080],portrait:[1080,1350],story:[1080,1920],substack:[1200,630],medium:[1200,675],wallpaper:[1920,1080]};
  const structures={prism:{name:'Quiet',depth:.28,edges:[{top:.18,bottom:.72},{top:.76,bottom:.14}]},fold:{name:'Folded',depth:.46,edges:[{top:.06,bottom:.62},{top:.68,bottom:.36}]},fan:{name:'Focused',depth:.34,edges:[{top:.22,bottom:.82},{top:.34,bottom:.08}]},slice:{name:'Expansive',depth:.24,edges:[{top:-.08,bottom:.48},{top:.86,bottom:.42}]}};
- let color=presets[0][1],chosen='Blue',edges=structures.prism.edges.map(e=>({...e})),selectedEdge=0,drag=null,seed=1,depth=structures.prism.depth,depthStyle='prism';
+ let color=presets[0][1],chosen=presets[0][0],edges=structures.prism.edges.map(e=>({...e})),selectedEdge=0,drag=null,seed=1,depth=structures.prism.depth,depthStyle='prism';
  const clamp=(n,min,max)=>Math.max(min,Math.min(max,n));
  const savedTheme=localStorage.getItem('sharped-theme'),themeToggle=$('themeToggle'),themeLabel=$('themeLabel');
- function setTheme(dark){document.documentElement.classList.toggle('dark',dark);themeToggle.setAttribute('aria-pressed',dark?'true':'false');themeLabel.textContent=dark?'Light':'Dark';localStorage.setItem('sharped-theme',dark?'dark':'light')}
+ function setTheme(dark){document.documentElement.classList.toggle('dark',dark);themeToggle.setAttribute('aria-pressed',dark?'true':'false');themeToggle.setAttribute('aria-label',dark?'Use light theme':'Use dark theme');themeLabel.textContent=dark?'Light':'Dark';localStorage.setItem('sharped-theme',dark?'dark':'light')}
  setTheme(savedTheme==='dark'||(!savedTheme&&matchMedia('(prefers-color-scheme: dark)').matches));themeToggle.addEventListener('click',()=>setTheme(!document.documentElement.classList.contains('dark')));
+ const drawer=$('controlDrawer'),drawerTitle=$('drawerTitle'),drawerBackdrop=$('drawerBackdrop'),drawerClose=$('drawerClose'),drawerTriggers=[...document.querySelectorAll('[data-drawer-target]')],drawerNames={controlsSection:'Controls',patternsSection:'Design patterns',exportSection:'Export'};let lastDrawerTrigger=null;
+ function openDrawer(sectionId,trigger){lastDrawerTrigger=trigger||document.activeElement;document.body.classList.add('drawer-open');drawer.setAttribute('aria-hidden','false');drawerTitle.textContent=drawerNames[sectionId]||'Controls';drawerTriggers.forEach(b=>b.setAttribute('aria-expanded',b===trigger?'true':'false'));requestAnimationFrame(()=>{document.getElementById(sectionId)?.scrollIntoView({block:'start'});drawerClose.focus()})}
+ function closeDrawer(){document.body.classList.remove('drawer-open');drawer.setAttribute('aria-hidden','true');drawerTriggers.forEach(b=>b.setAttribute('aria-expanded','false'));lastDrawerTrigger?.focus?.()}
+ drawerTriggers.forEach(b=>b.addEventListener('click',()=>openDrawer(b.dataset.drawerTarget,b)));drawerClose.addEventListener('click',closeDrawer);drawerBackdrop.addEventListener('click',closeDrawer);document.addEventListener('keydown',e=>{if(e.key==='Escape'&&document.body.classList.contains('drawer-open'))closeDrawer()});
  function hexRGB(hex){let s=hex.replace('#','');if(s.length===3)s=s.split('').map(c=>c+c).join('');return [0,2,4].map(i=>parseInt(s.slice(i,i+2),16))}
  function mix(a,b,t){const x=hexRGB(a),y=hexRGB(b);return '#'+x.map((v,i)=>Math.round(v*(1-t)+y[i]*t).toString(16).padStart(2,'0')).join('')}
- function colors(){const dark=chosen==='Black',white=chosen==='White';return white?['#ffffff','#f1f5f9','#dce8ef','#fafcff','#e2e8f0']:dark?['#090e17','#1f2937','#4b5563','#111827','#64748b']:[mix(color,'#ffffff',.87),mix(color,'#ffffff',.65),mix(color,'#ffffff',.42),mix(color,'#ffffff',.77),mix(color,'#ffffff',.28)]}
+ function colors(){const dark=chosen==='Ink',white=chosen==='White';return white?['#ffffff','#f1f5f9','#dce8ef','#fafcff','#e2e8f0']:dark?['#121212','#30343a','#606a73','#22272b','#7b8790']:[mix(color,'#ffffff',.87),mix(color,'#ffffff',.65),mix(color,'#ffffff',.42),mix(color,'#ffffff',.77),mix(color,'#ffffff',.28)]}
  function gradientMarkup(w,h,interactive){const c=colors(),a=edges[0],b=edges[1],x=n=>Math.round(n*w),line=(e,i)=>`<line x1="${x(e.top)}" y1="0" x2="${x(e.bottom)}" y2="${h}" class="edge-guide ${i===selectedEdge?'selected':''}"/><line x1="${x(e.top)}" y1="0" x2="${x(e.bottom)}" y2="${h}" class="edge-hit" data-edge="${i}"/><circle cx="${x(e.top)}" cy="0" r="10" class="edge-handle ${i===selectedEdge?'selected':''}"/><circle cx="${x(e.bottom)}" cy="${h}" r="10" class="edge-handle ${i===selectedEdge?'selected':''}"/>`;
  const band=Math.round(w*(.012+depth*.07)),opacity=(.08+depth*.36).toFixed(2),hi=(.08+depth*.2).toFixed(2),den=(a.bottom-a.top)-(b.bottom-b.top),iy=Math.max(.12,Math.min(.88,Math.abs(den)<.01?.5:(b.top-a.top)/den)),ix=x(a.top+(a.bottom-a.top)*iy),cy=Math.round(iy*h);
  const hardBands=depth<=0?'':edges.map((e,i)=>{const side=depthStyle==='slice'?(i%2?1:-1):depthStyle==='fan'?1:(i?-1:1),t=x(e.top),bt=x(e.bottom),off=band*side;return `<polygon points="${t},0 ${t+off},0 ${bt+off},${h} ${bt},${h}" fill="url(#depthColour${i})" opacity="${opacity}"/><polygon points="${t-off*.22},0 ${t},0 ${bt},${h} ${bt-off*.22},${h}" fill="url(#depthLight)" opacity="${hi}"/>`}).join('');
@@ -138,7 +266,7 @@ button:focus-visible,select:focus-visible,input:focus-visible,summary:focus-visi
  return `<defs><linearGradient id="g0" x1="0" y1="0" x2="1" y2="1" gradientUnits="objectBoundingBox"><stop offset="0" stop-color="${c[0]}"/><stop offset="1" stop-color="${c[1]}"/></linearGradient><linearGradient id="g1" x1="0" y1="0" x2="1" y2="1" gradientUnits="objectBoundingBox"><stop offset="0" stop-color="${c[3]}"/><stop offset="1" stop-color="${c[2]}"/></linearGradient><linearGradient id="g2" x1="0" y1="0" x2="1" y2="1" gradientUnits="objectBoundingBox"><stop offset="0" stop-color="${c[2]}"/><stop offset="1" stop-color="${c[4]}"/></linearGradient><linearGradient id="depthColour0" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="${c[0]}"/><stop offset="1" stop-color="${c[4]}"/></linearGradient><linearGradient id="depthColour1" x1="1" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${c[1]}"/><stop offset="1" stop-color="${c[4]}"/></linearGradient><linearGradient id="depthLight"><stop offset="0" stop-color="#fff"/><stop offset="1" stop-color="${c[0]}"/></linearGradient></defs><polygon points="0,0 ${x(a.top)},0 ${x(a.bottom)},${h} 0,${h}" fill="url(#g0)"/><polygon points="${x(a.top)},0 ${x(b.top)},0 ${x(b.bottom)},${h} ${x(a.bottom)},${h}" fill="url(#g1)"/><polygon points="${x(b.top)},0 ${w},0 ${w},${h} ${x(b.bottom)},${h}" fill="url(#g2)"/>${depthLayers}${interactive?edges.map(line).join(''):''}`;}
  function render(){preview.innerHTML=gradientMarkup(1000,600,true);document.querySelectorAll('#linePicker button').forEach((b,i)=>{const on=i===selectedEdge;b.classList.toggle('selected',on);b.setAttribute('aria-pressed',on?'true':'false')});document.querySelectorAll('#stylePicker button').forEach(b=>b.classList.toggle('selected',b.dataset.style===depthStyle))}
  function svgString(w,h){return `<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}" viewBox="0 0 ${w} ${h}">${gradientMarkup(w,h,false)}</svg>`}
- const paletteRow=$('paletteRow');presets.forEach(([name,hex])=>{const b=document.createElement('button');b.type='button';b.className='swatch'+(name==='Blue'?' selected':'');b.title=name;b.setAttribute('aria-label',name);b.setAttribute('aria-pressed',name==='Blue'?'true':'false');b.style.background=`linear-gradient(135deg,${mix(hex,'#fff',.68)},${mix(hex,'#fff',.2)})`;b.dataset.name=name;b.addEventListener('click',()=>select(hex,name));paletteRow.append(b)});const custom=document.createElement('label');custom.className='custom';custom.title='Custom colour';custom.setAttribute('aria-label','Custom colour');custom.innerHTML='<input id="customColor" type="color" value="#38bdf8" aria-label="Custom colour">';paletteRow.append(custom);$('customColor').addEventListener('input',e=>select(e.target.value,'Custom'));
+ const paletteRow=$('paletteRow');presets.forEach(([name,hex],index)=>{const active=index===0,b=document.createElement('button');b.type='button';b.className='swatch'+(active?' selected':'');b.title=name;b.setAttribute('aria-label',name);b.setAttribute('aria-pressed',active?'true':'false');b.style.background=`linear-gradient(135deg,${mix(hex,'#fff',.68)},${mix(hex,'#fff',.2)})`;b.dataset.name=name;b.addEventListener('click',()=>select(hex,name));paletteRow.append(b)});const custom=document.createElement('label');custom.className='custom';custom.title='Custom colour';custom.setAttribute('aria-label','Custom colour');custom.innerHTML='<input id="customColor" type="color" value="#7dd3fc" aria-label="Custom colour">';paletteRow.append(custom);$('customColor').addEventListener('input',e=>select(e.target.value,'Custom'));
  function select(hex,name){color=hex;chosen=name;paletteRow.querySelectorAll('.swatch').forEach(b=>{const active=b.dataset.name===name;b.classList.toggle('selected',active);b.setAttribute('aria-pressed',active?'true':'false')});custom.classList.toggle('selected',name==='Custom');render();status.textContent=name+' gradient selected.'}
  function position(e){const r=stage.getBoundingClientRect();return {x:(e.clientX-r.left)/r.width,y:(e.clientY-r.top)/r.height}}
  $('linePicker').addEventListener('click',e=>{const b=e.target.closest('button[data-line]');if(!b)return;selectedEdge=Number(b.dataset.line);render();status.textContent=`Line ${selectedEdge+1} selected. Drag anywhere on the canvas to move it.`});
@@ -149,9 +277,11 @@ button:focus-visible,select:focus-visible,input:focus-visible,summary:focus-visi
  function applyStructure(style){const preset=structures[style];depthStyle=style;depth=preset.depth;edges=preset.edges.map(e=>({...e}));selectedEdge=0;$('depth').value=Math.round(depth*100);$('depthValue').textContent=Math.round(depth*100)+'%';render();status.textContent=preset.name+' structure selected.'}
  $('stylePicker').addEventListener('click',e=>{const b=e.target.closest('button[data-style]');if(!b)return;applyStructure(b.dataset.style)});
  $('regenerate').addEventListener('click',()=>{seed++;const r=n=>{const z=Math.sin((seed+n)*91.713)*43758.545;return z-Math.floor(z)};const shapes={prism:[{top:.06+r(1)*.34,bottom:.52+r(2)*.34},{top:.62+r(3)*.28,bottom:.04+r(4)*.34}],fold:[{top:-.08+r(1)*.62,bottom:.28+r(2)*.58},{top:.56+r(3)*.36,bottom:.08+r(4)*.62}],fan:[{top:.08+r(1)*.28,bottom:.58+r(2)*.32},{top:.18+r(3)*.3,bottom:.02+r(4)*.34}],slice:[{top:-.12+r(1)*.52,bottom:.08+r(2)*.48},{top:.62+r(3)*.44,bottom:.48+r(4)*.42}]};edges=shapes[depthStyle];selectedEdge=0;render();if(!matchMedia('(prefers-reduced-motion: reduce)').matches)stage.animate([{opacity:.72,transform:'scale(.997)'},{opacity:1,transform:'scale(1)'}],{duration:260,easing:'cubic-bezier(.2,.8,.2,1)'});status.textContent='New '+structures[depthStyle].name+' composition generated.'});
+ $('quickRegenerate').addEventListener('click',()=>$('regenerate').click());
  $('reset').addEventListener('click',()=>applyStructure(depthStyle));
  function save(blob,name){const a=document.createElement('a'),url=URL.createObjectURL(blob);a.href=url;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(url),1500)}
- $('format').addEventListener('change',e=>$('exportMeta').textContent=e.target.options[e.target.selectedIndex].text);
+ function updateExportMeta(){const format=$('format').options[$('format').selectedIndex].text,[w,h]=sizes[$('size').value];$('exportMeta').textContent=`${format} · ${w} × ${h}`}
+ $('format').addEventListener('change',updateExportMeta);$('size').addEventListener('change',updateExportMeta);
  $('download').addEventListener('click',async()=>{const size=$('size').value,format=$('format').value,[w,h]=sizes[size],svg=svgString(w,h),base=`sharped-${size}-${w}x${h}`;try{if(format==='svg'){save(new Blob([svg],{type:'image/svg+xml'}),base+'.svg');status.textContent='SVG downloaded.';return}const url=URL.createObjectURL(new Blob([svg],{type:'image/svg+xml'}));const img=new Image();img.onload=()=>{const c=document.createElement('canvas');c.width=w;c.height=h;const context=c.getContext('2d');context.drawImage(img,0,0);URL.revokeObjectURL(url);const mime=format==='jpeg'?'image/jpeg':format==='webp'?'image/webp':'image/png';c.toBlob(blob=>{if(!blob){status.textContent='Export failed. Try PNG or SVG.';return}save(blob,base+'.'+(format==='jpeg'?'jpg':format));status.textContent=`${format.toUpperCase()} downloaded at ${w} × ${h}.`},mime,.94)};img.onerror=()=>{URL.revokeObjectURL(url);status.textContent='Export failed. Try SVG.'};img.src=url}catch{status.textContent='Export failed. Try another format.'}});
  render();
 })();
