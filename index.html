@@ -62,16 +62,17 @@ button{cursor:pointer}
   pointer-events:none;transition:opacity 180ms ease
 }
 .views-panel{
-  position:fixed;z-index:11;bottom:32px;left:50%;display:flex;align-items:center;gap:6px;
-  width:min(440px,calc(100% - 64px));min-height:40px;padding:8px;border:1px solid transparent;
+  position:fixed;z-index:22;bottom:32px;left:50%;display:flex;align-items:center;gap:6px;
+  width:auto;min-height:40px;padding:8px;border:1px solid transparent;
   border-radius:8px;background:#fff;box-shadow:0 3px 12px rgb(15 23 42 / 10%);
   transform:translateX(-50%);transition:opacity 180ms ease,transform 180ms ease
 }
-.command-navigation{display:grid;grid-template-columns:repeat(3,1fr);gap:4px;min-width:0;flex:1}
+.command-navigation{display:flex;gap:4px;min-width:0}
 .command-navigation button,.quick-create,.theme-toggle{
   min-height:32px;border:1px solid transparent;border-radius:6px;background:transparent;color:#334155;
   font:500 14px/1 Geist,system-ui,sans-serif;transition:background 160ms ease,border-color 160ms ease,color 160ms ease
 }
+.command-navigation button{padding:0 14px}
 .command-navigation button:hover,.command-navigation button[aria-expanded="true"],.quick-create:hover,.theme-toggle:hover{
   border-color:var(--coral);background:var(--coral-soft);color:#171717
 }
@@ -93,14 +94,13 @@ button{cursor:pointer}
 body.drawer-open .control-drawer{visibility:visible;transform:translateX(0);pointer-events:auto;transition:transform 900ms var(--drawer-sweep),visibility 0s linear 0s}
 body.drawer-open .drawer-backdrop{opacity:1;visibility:visible;pointer-events:auto;transition:opacity 460ms ease,visibility 0s linear 0s}
 body.drawer-open .site-content{transform:translateX(var(--drawer-shift));opacity:.56;filter:grayscale(.25) sepia(.18) hue-rotate(305deg) saturate(.88) brightness(.94);pointer-events:none}
-body.drawer-open .views-panel,body.drawer-open .views-panel-backdrop{opacity:0;pointer-events:none}
 .drawer-header{display:flex;align-items:center;justify-content:space-between;gap:16px;padding-bottom:16px;border-bottom:1px solid var(--line)}
 .drawer-lockup{display:flex;align-items:center;gap:8px}
 .drawer-mark{width:18px;height:18px;fill:var(--blue)}
 .drawer-title{margin:0;font:600 16px/1.25 Geist,system-ui,sans-serif}
 .icon-button{width:32px;height:32px;padding:0;display:grid;place-items:center;border:1px solid var(--line);border-radius:8px;background:transparent;color:var(--ink)}
 .icon-button:hover{border-color:var(--coral);background:var(--coral-soft);color:#171717}
-.drawer-content{width:min(860px,100%);padding:8px 0 48px;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));column-gap:40px}
+.drawer-content{width:min(860px,100%);padding:8px 0 110px;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));column-gap:40px}
 .drawer-section{min-width:0;padding:28px 0;border-bottom:1px solid var(--line)}
 .drawer-section:nth-child(-n+2){border-top:0}
 .eyebrow{margin:0 0 8px;color:var(--muted);font:500 12px/1 Geist Mono,ui-monospace,monospace;text-transform:uppercase;letter-spacing:.08em}
@@ -160,7 +160,7 @@ body.drawer-open .views-panel,body.drawer-open .views-panel-backdrop{opacity:0;p
 @media(max-width:640px){
   .brand{top:18px;left:18px}
   .site-content{padding:54px 14px 90px}
-  .views-panel{bottom:20px;width:calc(100% - 28px)}
+  .views-panel{bottom:20px;width:min(260px,calc(100% - 28px))}
   .command-navigation button{font-size:13px;padding:0 5px}
   .control-drawer{padding:18px}
   .drawer-content{display:block}
@@ -230,9 +230,7 @@ body.drawer-open .views-panel,body.drawer-open .views-panel-backdrop{opacity:0;p
 
   <div class="views-panel-backdrop" aria-hidden="true"></div>
   <aside class="views-panel" aria-label="Sharped controls and appearance">
-    <nav class="command-navigation" aria-label="Editor sections">
-      <button type="button" data-drawer-target="controlsSection" aria-expanded="false" aria-controls="controlDrawer">Controls</button>
-      <button type="button" data-drawer-target="patternsSection" aria-expanded="false" aria-controls="controlDrawer">Patterns</button>
+    <nav class="command-navigation" aria-label="Export controls">
       <button type="button" data-drawer-target="exportSection" aria-expanded="false" aria-controls="controlDrawer">Export</button>
     </nav>
     <span class="views-panel-divider" aria-hidden="true"></span>
@@ -251,11 +249,11 @@ body.drawer-open .views-panel,body.drawer-open .views-panel-backdrop{opacity:0;p
  const savedTheme=localStorage.getItem('sharped-theme'),themeToggle=$('themeToggle'),themeLabel=$('themeLabel');
  function setTheme(dark){document.documentElement.classList.toggle('dark',dark);themeToggle.setAttribute('aria-pressed',dark?'true':'false');themeToggle.setAttribute('aria-label',dark?'Use light theme':'Use dark theme');themeLabel.textContent=dark?'Light':'Dark';localStorage.setItem('sharped-theme',dark?'dark':'light')}
  setTheme(savedTheme==='dark'||(!savedTheme&&matchMedia('(prefers-color-scheme: dark)').matches));themeToggle.addEventListener('click',()=>setTheme(!document.documentElement.classList.contains('dark')));
- const drawer=$('controlDrawer'),drawerTitle=$('drawerTitle'),drawerBackdrop=$('drawerBackdrop'),drawerClose=$('drawerClose'),drawerTriggers=[...document.querySelectorAll('[data-drawer-target]')],drawerNames={controlsSection:'Controls',patternsSection:'Design patterns',exportSection:'Export'};let lastDrawerTrigger=null;
- function openDrawer(sectionId,trigger,focusClose=true){lastDrawerTrigger=trigger||document.activeElement;document.body.classList.add('drawer-open');drawer.setAttribute('aria-hidden','false');drawerTitle.textContent=drawerNames[sectionId]||'Controls';drawerTriggers.forEach(b=>b.setAttribute('aria-expanded',b===trigger?'true':'false'));requestAnimationFrame(()=>{document.getElementById(sectionId)?.scrollIntoView({block:'start'});if(focusClose)drawerClose.focus()})}
+ const drawer=$('controlDrawer'),drawerBackdrop=$('drawerBackdrop'),drawerClose=$('drawerClose'),drawerTriggers=[...document.querySelectorAll('[data-drawer-target]')];let lastDrawerTrigger=null;
+ function openDrawer(sectionId,trigger,focusClose=true){lastDrawerTrigger=trigger||document.activeElement;document.body.classList.add('drawer-open');drawer.setAttribute('aria-hidden','false');drawerTriggers.forEach(b=>b.setAttribute('aria-expanded',b===trigger?'true':'false'));requestAnimationFrame(()=>{document.getElementById(sectionId)?.scrollIntoView({block:'start'});if(focusClose)drawerClose.focus()})}
  function closeDrawer(){document.body.classList.remove('drawer-open');drawer.setAttribute('aria-hidden','true');drawerTriggers.forEach(b=>b.setAttribute('aria-expanded','false'));lastDrawerTrigger?.focus?.()}
  drawerTriggers.forEach(b=>b.addEventListener('click',()=>openDrawer(b.dataset.drawerTarget,b)));drawerClose.addEventListener('click',closeDrawer);drawerBackdrop.addEventListener('click',closeDrawer);document.addEventListener('keydown',e=>{if(e.key==='Escape'&&document.body.classList.contains('drawer-open'))closeDrawer()});
- requestAnimationFrame(()=>requestAnimationFrame(()=>openDrawer('controlsSection',drawerTriggers[0],false)));
+ requestAnimationFrame(()=>requestAnimationFrame(()=>openDrawer('controlsSection',null,false)));
  function hexRGB(hex){let s=hex.replace('#','');if(s.length===3)s=s.split('').map(c=>c+c).join('');return [0,2,4].map(i=>parseInt(s.slice(i,i+2),16))}
  function mix(a,b,t){const x=hexRGB(a),y=hexRGB(b);return '#'+x.map((v,i)=>Math.round(v*(1-t)+y[i]*t).toString(16).padStart(2,'0')).join('')}
  function colors(){const dark=chosen==='Ink',white=chosen==='White';return white?['#ffffff','#f1f5f9','#dce8ef','#fafcff','#e2e8f0']:dark?['#121212','#30343a','#606a73','#22272b','#7b8790']:[mix(color,'#ffffff',.87),mix(color,'#ffffff',.65),mix(color,'#ffffff',.42),mix(color,'#ffffff',.77),mix(color,'#ffffff',.28)]}
