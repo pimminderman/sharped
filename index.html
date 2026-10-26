@@ -92,18 +92,14 @@ button{cursor:pointer}
 body.drawer-open .control-drawer{visibility:visible;transform:translateX(0);pointer-events:auto;transition:transform 900ms var(--drawer-sweep),visibility 0s linear 0s}
 body.drawer-open .site-content{margin-right:var(--side-panel-width)}
 body.drawer-open .views-panel{left:var(--workspace-center)}
-.drawer-header{position:sticky;z-index:2;top:-24px;display:flex;align-items:center;justify-content:space-between;gap:16px;padding:24px 0 16px;border-bottom:1px solid var(--line);background:var(--bg)}
-.drawer-lockup{display:flex;align-items:center;gap:8px}
-.drawer-mark{width:18px;height:18px;fill:var(--blue)}
-.drawer-title{margin:0;font:600 16px/1.25 Geist,system-ui,sans-serif}
+.drawer-header{position:sticky;z-index:2;top:-24px;display:flex;align-items:center;justify-content:flex-end;padding:24px 0 8px;background:var(--bg)}
 .icon-button{width:32px;height:32px;padding:0;display:grid;place-items:center;border:1px solid var(--line);border-radius:8px;background:transparent;color:var(--ink)}
 .icon-button:hover{border-color:var(--coral);background:var(--coral-soft);color:#171717}
-.drawer-content{width:100%;padding:8px 0 110px;display:grid;grid-template-columns:1fr}
-.drawer-section{min-width:0;padding:28px 0;border-bottom:1px solid var(--line)}
+.drawer-content{width:100%;padding:0 0 110px;display:grid;grid-template-columns:1fr}
+.drawer-section{min-width:0;padding:20px 0;border-bottom:1px solid var(--line)}
 .drawer-section:nth-child(-n+2){border-top:0}
-.eyebrow{margin:0 0 8px;color:var(--muted);font:500 12px/1 Geist Mono,ui-monospace,monospace;text-transform:uppercase;letter-spacing:.08em}
-.drawer-section h3{margin:0 0 18px;font:600 22px/1.15 Geist,system-ui,sans-serif;letter-spacing:-.025em}
-.section-heading{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:18px}
+.drawer-section h3{margin:0 0 14px;font:600 14px/1 Geist,system-ui,sans-serif;letter-spacing:-.01em}
+.section-heading{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:14px}
 .section-heading h3{margin:0}
 .palette-row{display:grid;grid-template-columns:repeat(auto-fit,32px);align-items:center;gap:10px}
 .swatch,.custom{width:32px;height:32px;border-radius:50%;position:relative}
@@ -113,14 +109,18 @@ body.drawer-open .views-panel{left:var(--workspace-center)}
 .custom{overflow:hidden;border:1px solid var(--line);background:conic-gradient(#ff6868,#ffc85d,#61df9e,#6dc8ff,#ab8dff,#ff6868)}
 .custom input{position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:pointer}
 .custom.selected:after{content:"";position:absolute;inset:3px;border:1px solid #fff;border-radius:50%;pointer-events:none}
-.depth-row{display:grid;grid-template-columns:auto minmax(120px,1fr) 42px;align-items:center;gap:12px;margin-top:24px}
-.depth-row label,.select-wrap label{color:var(--muted);font:500 14px/1 Geist,system-ui,sans-serif}
-.depth-row input{width:100%;accent-color:var(--coral-strong)}
+.slider-stack{display:grid;gap:8px;margin-top:20px}
+.depth-row{--slider-from:#e0f2fe;--slider-to:#7dd3fc;display:grid;grid-template-columns:54px minmax(80px,1fr) 34px;align-items:center;gap:8px}
+.depth-row label,.select-wrap label{color:var(--muted);font:500 12px/1 Geist,system-ui,sans-serif}
+.depth-row input{width:100%;height:28px;margin:0;appearance:none;-webkit-appearance:none;border:1px solid rgb(100 116 139 / 18%);border-radius:7px;background:repeating-linear-gradient(90deg,transparent 0,transparent calc(10% - 1px),rgb(100 116 139 / 16%) calc(10% - 1px),rgb(100 116 139 / 16%) 10%),linear-gradient(90deg,var(--slider-from),var(--slider-to));cursor:pointer}
+.depth-row input::-webkit-slider-thumb{appearance:none;-webkit-appearance:none;width:3px;height:22px;border:0;border-radius:2px;background:#fff;box-shadow:0 0 0 1px rgb(15 23 42 / 32%),0 1px 3px rgb(15 23 42 / 28%)}
+.depth-row input::-moz-range-thumb{width:3px;height:22px;border:0;border-radius:2px;background:#fff;box-shadow:0 0 0 1px rgb(15 23 42 / 32%),0 1px 3px rgb(15 23 42 / 28%)}
 .depth-value,.export-meta{color:var(--muted);font:500 12px/1 Geist Mono,ui-monospace,monospace;text-align:right;font-variant-numeric:tabular-nums}
-.style-picker,.line-picker{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.style-picker{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:4px}
+.line-picker{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:4px;margin-top:8px}
 .style-picker button,.line-picker button{
-  min-height:40px;padding:0 12px;border:1px solid var(--line);border-radius:6px;background:transparent;color:var(--ink);
-  font:500 14px/1 Geist,system-ui,sans-serif
+  min-height:32px;padding:0 7px;border:1px solid var(--line);border-radius:6px;background:transparent;color:var(--ink);
+  font:500 12px/1 Geist,system-ui,sans-serif
 }
 .style-picker button:hover,.line-picker button:hover{border-color:var(--coral);background:var(--coral-soft)}
 .style-picker button.selected,.line-picker button.selected{border-color:var(--coral);background:var(--coral-soft);color:#171717;font-weight:600}
@@ -131,6 +131,15 @@ body.drawer-open .views-panel{left:var(--workspace-center)}
 .coral-action:hover,.download-button:hover{background:var(--coral)}
 .text-action{padding:0;border:0;background:none;color:var(--coral-strong);font:500 14px/1 Geist,system-ui,sans-serif}
 .text-action:hover{text-decoration:underline;text-underline-offset:3px}
+.geometry-divider{height:1px;margin:14px 0 10px;background:var(--line)}
+.export-section{border-bottom:0}
+.export-menu{position:relative}
+.export-menu summary{min-height:40px;display:flex;align-items:center;justify-content:space-between;gap:8px;padding:0 14px;list-style:none;border:1px solid var(--coral);border-radius:6px;background:var(--coral-soft);color:#171717;font:600 14px/1 Geist,system-ui,sans-serif;cursor:pointer}
+.export-menu summary::-webkit-details-marker{display:none}
+.export-menu[open] summary{background:var(--coral)}
+.export-menu summary .material-symbols-outlined{transition:transform 160ms ease}
+.export-menu[open] summary .material-symbols-outlined{transform:rotate(180deg)}
+.export-popover{position:absolute;z-index:4;right:0;bottom:48px;left:0;padding:12px;border:1px solid var(--line);border-radius:8px;background:var(--card);box-shadow:0 12px 32px rgb(15 23 42 / 14%)}
 .export-fields{display:grid;grid-template-columns:1fr;gap:12px}
 .select-wrap label{display:block;margin-bottom:7px}
 .select-wrap select{width:100%;height:40px;padding:0 10px;border:1px solid var(--line);border-radius:6px;background:#fff;color:#171717;font:500 14px/1 Geist,system-ui,sans-serif}
@@ -153,8 +162,6 @@ body.drawer-open .views-panel{left:var(--workspace-center)}
 }
 @media(min-width:1200px){
   :root{--side-panel-width:20vw;--workspace-center:40vw}
-  .depth-row{grid-template-columns:minmax(0,1fr) 42px}
-  .depth-row label{grid-column:1/-1}
 }
 @media(max-width:900px){
   .drawer-content{grid-template-columns:1fr}
@@ -195,38 +202,38 @@ body.drawer-open .views-panel{left:var(--workspace-center)}
   <div class="drawer-backdrop" id="drawerBackdrop" aria-hidden="true"></div>
   <aside class="control-drawer" id="controlDrawer" aria-hidden="true" aria-labelledby="drawerTitle">
     <header class="drawer-header">
-      <div class="drawer-lockup">
-        <svg class="drawer-mark" viewBox="0 0 64 64" aria-hidden="true"><path d="M8 54 54 8a32 32 0 0 1-46 46Z"/></svg>
-        <h2 class="drawer-title" id="drawerTitle">Controls</h2>
-      </div>
+      <h2 class="status" id="drawerTitle">Controls</h2>
       <button type="button" class="icon-button drawer-close" id="drawerClose" aria-label="Close drawer"><span class="material-symbols-outlined" aria-hidden="true">close</span></button>
     </header>
     <div class="drawer-content">
       <section class="drawer-section" id="controlsSection">
-        <p class="eyebrow">Controls</p>
-        <h3>Atmosphere</h3>
+        <h3>Colour</h3>
         <div class="palette-row" id="paletteRow" role="group" aria-label="Gradient colours"></div>
-        <div class="depth-row"><label for="depth">Intensity</label><input id="depth" type="range" min="0" max="100" value="28" aria-label="Atmosphere intensity"><output id="depthValue" class="depth-value">28%</output></div>
-      </section>
-
-      <section class="drawer-section" id="patternsSection">
-        <p class="eyebrow">Design patterns</p>
-        <div class="section-heading"><h3>Structure</h3><button type="button" class="coral-action" id="regenerate"><span class="material-symbols-outlined" aria-hidden="true">refresh</span>New composition</button></div>
-        <div class="style-picker" id="stylePicker" role="group" aria-label="Spatial structure"><button type="button" class="selected" data-style="prism">Quiet</button><button type="button" data-style="fold">Folded</button><button type="button" data-style="fan">Focused</button><button type="button" data-style="slice">Expansive</button></div>
+        <div class="slider-stack" aria-label="Colour adjustments">
+          <div class="depth-row"><label for="depth">Depth</label><input id="depth" type="range" min="0" max="100" value="28"><output id="depthValue" class="depth-value">28</output></div>
+          <div class="depth-row"><label for="fade">Fade</label><input id="fade" type="range" min="0" max="100" value="18"><output id="fadeValue" class="depth-value">18</output></div>
+          <div class="depth-row"><label for="grain">Grain</label><input id="grain" type="range" min="0" max="100" value="8"><output id="grainValue" class="depth-value">8</output></div>
+          <div class="depth-row"><label for="stream">Stream</label><input id="stream" type="range" min="0" max="100" value="30"><output id="streamValue" class="depth-value">30</output></div>
+          <div class="depth-row"><label for="turn">Turn</label><input id="turn" type="range" min="0" max="360" value="45"><output id="turnValue" class="depth-value">45°</output></div>
+        </div>
       </section>
 
       <section class="drawer-section" id="geometrySection">
-        <p class="eyebrow">Geometry</p>
-        <div class="section-heading"><h3>Active plane</h3><button type="button" class="text-action" id="reset">Reset</button></div>
+        <div class="section-heading"><h3>Geometry</h3><button type="button" class="text-action" id="reset">Reset</button></div>
+        <div class="style-picker" id="stylePicker" role="group" aria-label="Pattern"><button type="button" class="selected" data-style="prism">Quiet</button><button type="button" data-style="fold">Fold</button><button type="button" data-style="fan">Focus</button><button type="button" data-style="slice">Slice</button></div>
+        <div class="geometry-divider" aria-hidden="true"></div>
         <div class="line-picker" id="linePicker" role="group" aria-label="Selected gradient line"><button type="button" class="selected" data-line="0" aria-pressed="true">Plane 1</button><button type="button" data-line="1" aria-pressed="false">Plane 2</button></div>
       </section>
 
       <section class="drawer-section export-section" id="exportSection">
-        <p class="eyebrow">Export</p>
-        <h3>Output</h3>
-        <div class="export-fields"><div class="select-wrap"><label for="size">Canvas</label><select id="size"><option value="social">Social landscape · 1200 × 630</option><option value="square">Social square · 1080 × 1080</option><option value="portrait">Social portrait · 1080 × 1350</option><option value="story">Story · 1080 × 1920</option><option value="substack">Substack cover · 1200 × 630</option><option value="medium">Medium wide · 1200 × 675</option><option value="wallpaper">Desktop · 1920 × 1080</option></select></div><div class="select-wrap"><label for="format">Format</label><select id="format"><option value="png">PNG</option><option value="jpeg">JPG</option><option value="webp">WebP</option><option value="svg">SVG</option></select></div></div>
-        <button type="button" class="download-button" id="download">Download <span class="material-symbols-outlined" aria-hidden="true">download</span></button>
-        <span id="exportMeta" class="export-meta">PNG · 1200 × 630</span>
+        <details class="export-menu">
+          <summary>Export <span class="material-symbols-outlined" aria-hidden="true">keyboard_arrow_down</span></summary>
+          <div class="export-popover">
+            <div class="export-fields"><div class="select-wrap"><label for="size">Canvas</label><select id="size"><option value="social">Social landscape · 1200 × 630</option><option value="square">Social square · 1080 × 1080</option><option value="portrait">Social portrait · 1080 × 1350</option><option value="story">Story · 1080 × 1920</option><option value="substack">Substack cover · 1200 × 630</option><option value="medium">Medium wide · 1200 × 675</option><option value="wallpaper">Desktop · 1920 × 1080</option></select></div><div class="select-wrap"><label for="format">Format</label><select id="format"><option value="png">PNG</option><option value="jpeg">JPG</option><option value="webp">WebP</option><option value="svg">SVG</option></select></div></div>
+            <button type="button" class="download-button" id="download">Download <span class="material-symbols-outlined" aria-hidden="true">download</span></button>
+            <span id="exportMeta" class="export-meta">PNG · 1200 × 630</span>
+          </div>
+        </details>
       </section>
     </div>
   </aside>
@@ -247,7 +254,7 @@ body.drawer-open .views-panel{left:var(--workspace-center)}
  const presets=[['Light blue','#7dd3fc'],['Coral','#fda89a'],['Lilac','#a78bfa'],['Mint','#86efac'],['White','#f8fafc'],['Ink','#171717']];
  const sizes={social:[1200,630],square:[1080,1080],portrait:[1080,1350],story:[1080,1920],substack:[1200,630],medium:[1200,675],wallpaper:[1920,1080]};
  const structures={prism:{name:'Quiet',depth:.28,edges:[{top:.18,bottom:.72},{top:.76,bottom:.14}]},fold:{name:'Folded',depth:.46,edges:[{top:.06,bottom:.62},{top:.68,bottom:.36}]},fan:{name:'Focused',depth:.34,edges:[{top:.22,bottom:.82},{top:.34,bottom:.08}]},slice:{name:'Expansive',depth:.24,edges:[{top:-.08,bottom:.48},{top:.86,bottom:.42}]}};
- let color=presets[0][1],chosen=presets[0][0],edges=structures.prism.edges.map(e=>({...e})),selectedEdge=0,drag=null,seed=1,depth=structures.prism.depth,depthStyle='prism';
+ let color=presets[0][1],chosen=presets[0][0],edges=structures.prism.edges.map(e=>({...e})),selectedEdge=0,drag=null,seed=1,depth=structures.prism.depth,fade=.18,grain=.08,stream=.3,turn=45,depthStyle='prism';
  const clamp=(n,min,max)=>Math.max(min,Math.min(max,n));
  const savedTheme=localStorage.getItem('sharped-theme'),themeToggle=$('themeToggle'),themeLabel=$('themeLabel');
  function setTheme(dark){document.documentElement.classList.toggle('dark',dark);themeToggle.setAttribute('aria-pressed',dark?'true':'false');themeToggle.setAttribute('aria-label',dark?'Use light theme':'Use dark theme');themeLabel.textContent=dark?'Light':'Dark';localStorage.setItem('sharped-theme',dark?'dark':'light')}
@@ -259,33 +266,35 @@ body.drawer-open .views-panel{left:var(--workspace-center)}
  requestAnimationFrame(()=>requestAnimationFrame(()=>openDrawer('controlsSection',null,false)));
  function hexRGB(hex){let s=hex.replace('#','');if(s.length===3)s=s.split('').map(c=>c+c).join('');return [0,2,4].map(i=>parseInt(s.slice(i,i+2),16))}
  function mix(a,b,t){const x=hexRGB(a),y=hexRGB(b);return '#'+x.map((v,i)=>Math.round(v*(1-t)+y[i]*t).toString(16).padStart(2,'0')).join('')}
- function colors(){const dark=chosen==='Ink',white=chosen==='White';return white?['#ffffff','#f1f5f9','#dce8ef','#fafcff','#e2e8f0']:dark?['#121212','#30343a','#606a73','#22272b','#7b8790']:[mix(color,'#ffffff',.87),mix(color,'#ffffff',.65),mix(color,'#ffffff',.42),mix(color,'#ffffff',.77),mix(color,'#ffffff',.28)]}
- function gradientMarkup(w,h,interactive){const c=colors(),a=edges[0],b=edges[1],x=n=>Math.round(n*w),line=(e,i)=>`<line x1="${x(e.top)}" y1="0" x2="${x(e.bottom)}" y2="${h}" class="edge-guide ${i===selectedEdge?'selected':''}"/><line x1="${x(e.top)}" y1="0" x2="${x(e.bottom)}" y2="${h}" class="edge-hit" data-edge="${i}"/><circle cx="${x(e.top)}" cy="0" r="10" class="edge-handle ${i===selectedEdge?'selected':''}"/><circle cx="${x(e.bottom)}" cy="${h}" r="10" class="edge-handle ${i===selectedEdge?'selected':''}"/>`;
+ function colors(){const dark=chosen==='Ink',white=chosen==='White',base=white?['#ffffff','#f1f5f9','#dce8ef','#fafcff','#e2e8f0']:dark?['#121212','#30343a','#606a73','#22272b','#7b8790']:[mix(color,'#ffffff',.87),mix(color,'#ffffff',.65),mix(color,'#ffffff',.42),mix(color,'#ffffff',.77),mix(color,'#ffffff',.28)];return base.map(c=>mix(c,'#ffffff',fade*.48))}
+ function gradientMarkup(w,h,interactive){const c=colors(),a=edges[0],b=edges[1],x=n=>Math.round(n*w),rad=turn*Math.PI/180,gx1=(.5-Math.cos(rad)*.5).toFixed(3),gy1=(.5-Math.sin(rad)*.5).toFixed(3),gx2=(1-gx1).toFixed(3),gy2=(1-gy1).toFixed(3),streamAt=Math.round(20+stream*60),line=(e,i)=>`<line x1="${x(e.top)}" y1="0" x2="${x(e.bottom)}" y2="${h}" class="edge-guide ${i===selectedEdge?'selected':''}"/><line x1="${x(e.top)}" y1="0" x2="${x(e.bottom)}" y2="${h}" class="edge-hit" data-edge="${i}"/><circle cx="${x(e.top)}" cy="0" r="10" class="edge-handle ${i===selectedEdge?'selected':''}"/><circle cx="${x(e.bottom)}" cy="${h}" r="10" class="edge-handle ${i===selectedEdge?'selected':''}"/>`;
  const band=Math.round(w*(.012+depth*.07)),opacity=(.08+depth*.36).toFixed(2),hi=(.08+depth*.2).toFixed(2),den=(a.bottom-a.top)-(b.bottom-b.top),iy=Math.max(.12,Math.min(.88,Math.abs(den)<.01?.5:(b.top-a.top)/den)),ix=x(a.top+(a.bottom-a.top)*iy),cy=Math.round(iy*h);
  const hardBands=depth<=0?'':edges.map((e,i)=>{const side=depthStyle==='slice'?(i%2?1:-1):depthStyle==='fan'?1:(i?-1:1),t=x(e.top),bt=x(e.bottom),off=band*side;return `<polygon points="${t},0 ${t+off},0 ${bt+off},${h} ${bt},${h}" fill="url(#depthColour${i})" opacity="${opacity}"/><polygon points="${t-off*.22},0 ${t},0 ${bt},${h} ${bt-off*.22},${h}" fill="url(#depthLight)" opacity="${hi}"/>`}).join('');
  const prism=`<polygon points="0,0 ${x(a.top)},0 ${ix},${cy} 0,${Math.round(h*.46)}" fill="#fff" opacity="${(.06+depth*.16).toFixed(2)}"/><polygon points="${x(a.top)},0 ${x(b.top)},0 ${ix},${cy}" fill="${c[0]}" opacity="${(.12+depth*.2).toFixed(2)}"/><polygon points="${x(b.top)},0 ${w},0 ${w},${Math.round(h*.22)} ${ix},${cy}" fill="#fff" opacity="${(.1+depth*.22).toFixed(2)}"/><polygon points="0,${Math.round(h*.46)} ${ix},${cy} ${x(a.bottom)},${h} 0,${h}" fill="${c[1]}" opacity="${(.12+depth*.18).toFixed(2)}"/><polygon points="${ix},${cy} ${w},${Math.round(h*.22)} ${w},${h} ${x(b.bottom)},${h}" fill="#fff" opacity="${(.07+depth*.17).toFixed(2)}"/>`;
  const depthLayers=depthStyle==='prism'?prism:hardBands;
- return `<defs><linearGradient id="g0" x1="0" y1="0" x2="1" y2="1" gradientUnits="objectBoundingBox"><stop offset="0" stop-color="${c[0]}"/><stop offset="1" stop-color="${c[1]}"/></linearGradient><linearGradient id="g1" x1="0" y1="0" x2="1" y2="1" gradientUnits="objectBoundingBox"><stop offset="0" stop-color="${c[3]}"/><stop offset="1" stop-color="${c[2]}"/></linearGradient><linearGradient id="g2" x1="0" y1="0" x2="1" y2="1" gradientUnits="objectBoundingBox"><stop offset="0" stop-color="${c[2]}"/><stop offset="1" stop-color="${c[4]}"/></linearGradient><linearGradient id="depthColour0" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="${c[0]}"/><stop offset="1" stop-color="${c[4]}"/></linearGradient><linearGradient id="depthColour1" x1="1" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${c[1]}"/><stop offset="1" stop-color="${c[4]}"/></linearGradient><linearGradient id="depthLight"><stop offset="0" stop-color="#fff"/><stop offset="1" stop-color="${c[0]}"/></linearGradient></defs><polygon points="0,0 ${x(a.top)},0 ${x(a.bottom)},${h} 0,${h}" fill="url(#g0)"/><polygon points="${x(a.top)},0 ${x(b.top)},0 ${x(b.bottom)},${h} ${x(a.bottom)},${h}" fill="url(#g1)"/><polygon points="${x(b.top)},0 ${w},0 ${w},${h} ${x(b.bottom)},${h}" fill="url(#g2)"/>${depthLayers}${interactive?edges.map(line).join(''):''}`;}
+ return `<defs><linearGradient id="g0" x1="${gx1}" y1="${gy1}" x2="${gx2}" y2="${gy2}"><stop offset="0" stop-color="${c[0]}"/><stop offset="1" stop-color="${c[1]}"/></linearGradient><linearGradient id="g1" x1="${gx2}" y1="${gy1}" x2="${gx1}" y2="${gy2}"><stop offset="0" stop-color="${c[3]}"/><stop offset="1" stop-color="${c[2]}"/></linearGradient><linearGradient id="g2" x1="${gx1}" y1="${gy2}" x2="${gx2}" y2="${gy1}"><stop offset="0" stop-color="${c[2]}"/><stop offset="1" stop-color="${c[4]}"/></linearGradient><linearGradient id="depthColour0" x1="${gx1}" y1="${gy1}" x2="${gx2}" y2="${gy2}"><stop offset="0" stop-color="${c[0]}"/><stop offset="1" stop-color="${c[4]}"/></linearGradient><linearGradient id="depthColour1" x1="${gx2}" y1="${gy1}" x2="${gx1}" y2="${gy2}"><stop offset="0" stop-color="${c[1]}"/><stop offset="1" stop-color="${c[4]}"/></linearGradient><linearGradient id="depthLight"><stop offset="0" stop-color="#fff"/><stop offset="1" stop-color="${c[0]}"/></linearGradient><linearGradient id="streamGradient" x1="${gy1}" y1="${gx2}" x2="${gy2}" y2="${gx1}"><stop offset="${Math.max(0,streamAt-18)}%" stop-color="${c[1]}" stop-opacity="0"/><stop offset="${streamAt}%" stop-color="#fff" stop-opacity=".86"/><stop offset="${Math.min(100,streamAt+18)}%" stop-color="${c[4]}" stop-opacity="0"/></linearGradient><filter id="grainFilter" x="0" y="0" width="100%" height="100%"><feTurbulence type="fractalNoise" baseFrequency=".8" numOctaves="3" seed="${seed}"/></filter></defs><polygon points="0,0 ${x(a.top)},0 ${x(a.bottom)},${h} 0,${h}" fill="url(#g0)"/><polygon points="${x(a.top)},0 ${x(b.top)},0 ${x(b.bottom)},${h} ${x(a.bottom)},${h}" fill="url(#g1)"/><polygon points="${x(b.top)},0 ${w},0 ${w},${h} ${x(b.bottom)},${h}" fill="url(#g2)"/>${depthLayers}<rect width="${w}" height="${h}" fill="url(#streamGradient)" opacity="${(stream*.38).toFixed(2)}" pointer-events="none"/><rect width="${w}" height="${h}" filter="url(#grainFilter)" opacity="${(grain*.15).toFixed(3)}" style="mix-blend-mode:soft-light" pointer-events="none"/>${interactive?edges.map(line).join(''):''}`;}
  function render(){preview.innerHTML=gradientMarkup(1000,600,true);document.querySelectorAll('#linePicker button').forEach((b,i)=>{const on=i===selectedEdge;b.classList.toggle('selected',on);b.setAttribute('aria-pressed',on?'true':'false')});document.querySelectorAll('#stylePicker button').forEach(b=>b.classList.toggle('selected',b.dataset.style===depthStyle))}
  function svgString(w,h){return `<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}" viewBox="0 0 ${w} ${h}">${gradientMarkup(w,h,false)}</svg>`}
  const paletteRow=$('paletteRow');presets.forEach(([name,hex],index)=>{const active=index===0,b=document.createElement('button');b.type='button';b.className='swatch'+(active?' selected':'');b.title=name;b.setAttribute('aria-label',name);b.setAttribute('aria-pressed',active?'true':'false');b.style.background=`linear-gradient(135deg,${mix(hex,'#fff',.68)},${mix(hex,'#fff',.2)})`;b.dataset.name=name;b.addEventListener('click',()=>select(hex,name));paletteRow.append(b)});const custom=document.createElement('label');custom.className='custom';custom.title='Custom colour';custom.setAttribute('aria-label','Custom colour');custom.innerHTML='<input id="customColor" type="color" value="#7dd3fc" aria-label="Custom colour">';paletteRow.append(custom);$('customColor').addEventListener('input',e=>select(e.target.value,'Custom'));
- function select(hex,name){color=hex;chosen=name;paletteRow.querySelectorAll('.swatch').forEach(b=>{const active=b.dataset.name===name;b.classList.toggle('selected',active);b.setAttribute('aria-pressed',active?'true':'false')});custom.classList.toggle('selected',name==='Custom');render();status.textContent=name+' gradient selected.'}
+ function paintSliders(){document.querySelectorAll('.depth-row').forEach(row=>{row.style.setProperty('--slider-from',mix(color,'#ffffff',.84));row.style.setProperty('--slider-to',mix(color,'#ffffff',chosen==='Ink'?.34:.08))})}
+ function select(hex,name){color=hex;chosen=name;paletteRow.querySelectorAll('.swatch').forEach(b=>{const active=b.dataset.name===name;b.classList.toggle('selected',active);b.setAttribute('aria-pressed',active?'true':'false')});custom.classList.toggle('selected',name==='Custom');paintSliders();render();status.textContent=name+' gradient selected.'}
  function position(e){const r=stage.getBoundingClientRect();return {x:(e.clientX-r.left)/r.width,y:(e.clientY-r.top)/r.height}}
  $('linePicker').addEventListener('click',e=>{const b=e.target.closest('button[data-line]');if(!b)return;selectedEdge=Number(b.dataset.line);render();status.textContent=`Line ${selectedEdge+1} selected. Drag anywhere on the canvas to move it.`});
  stage.addEventListener('pointerdown',e=>{const p=position(e),hit=e.target?.dataset?.edge;if(hit!==undefined)selectedEdge=Number(hit);const ed=edges[selectedEdge],lineX=ed.top+(ed.bottom-ed.top)*p.y,nearLine=Math.abs(p.x-lineX)<.12;const mode=nearLine&&p.y<.22?'top':nearLine&&p.y>.78?'bottom':'both';drag={index:selectedEdge,startX:p.x,startTop:ed.top,startBottom:ed.bottom,mode};stage.setPointerCapture(e.pointerId);stage.classList.add('dragging');render();status.textContent=mode==='both'?`Moving Line ${selectedEdge+1}. It can cross the other line.`:'Drag sideways to change the line angle.'});
  stage.addEventListener('pointermove',e=>{if(!drag)return;const p=position(e),dx=p.x-drag.startX,ed=edges[drag.index];if(drag.mode!=='bottom')ed.top=clamp(drag.startTop+dx,-.35,1.35);if(drag.mode!=='top')ed.bottom=clamp(drag.startBottom+dx,-.35,1.35);render()});
  const stopDrag=()=>{drag=null;stage.classList.remove('dragging')};stage.addEventListener('pointerup',stopDrag);stage.addEventListener('pointercancel',stopDrag);
- $('depth').addEventListener('input',e=>{depth=Number(e.target.value)/100;$('depthValue').textContent=e.target.value+'%';render();status.textContent='Depth adjusted.'});
- function applyStructure(style){const preset=structures[style];depthStyle=style;depth=preset.depth;edges=preset.edges.map(e=>({...e}));selectedEdge=0;$('depth').value=Math.round(depth*100);$('depthValue').textContent=Math.round(depth*100)+'%';render();status.textContent=preset.name+' structure selected.'}
+ const adjustments={depth:v=>depth=v/100,fade:v=>fade=v/100,grain:v=>grain=v/100,stream:v=>stream=v/100,turn:v=>turn=v};
+ Object.keys(adjustments).forEach(id=>$(id).addEventListener('input',e=>{const value=Number(e.target.value);adjustments[id](value);$(id+'Value').textContent=id==='turn'?value+'°':value;render();status.textContent=id[0].toUpperCase()+id.slice(1)+' adjusted.'}));
+ function applyStructure(style){const preset=structures[style];depthStyle=style;depth=preset.depth;edges=preset.edges.map(e=>({...e}));selectedEdge=0;$('depth').value=Math.round(depth*100);$('depthValue').textContent=Math.round(depth*100);render();status.textContent=preset.name+' pattern selected.'}
  $('stylePicker').addEventListener('click',e=>{const b=e.target.closest('button[data-style]');if(!b)return;applyStructure(b.dataset.style)});
- $('regenerate').addEventListener('click',()=>{seed++;const r=n=>{const z=Math.sin((seed+n)*91.713)*43758.545;return z-Math.floor(z)};const shapes={prism:[{top:.06+r(1)*.34,bottom:.52+r(2)*.34},{top:.62+r(3)*.28,bottom:.04+r(4)*.34}],fold:[{top:-.08+r(1)*.62,bottom:.28+r(2)*.58},{top:.56+r(3)*.36,bottom:.08+r(4)*.62}],fan:[{top:.08+r(1)*.28,bottom:.58+r(2)*.32},{top:.18+r(3)*.3,bottom:.02+r(4)*.34}],slice:[{top:-.12+r(1)*.52,bottom:.08+r(2)*.48},{top:.62+r(3)*.44,bottom:.48+r(4)*.42}]};edges=shapes[depthStyle];selectedEdge=0;render();if(!matchMedia('(prefers-reduced-motion: reduce)').matches)stage.animate([{opacity:.72,transform:'scale(.997)'},{opacity:1,transform:'scale(1)'}],{duration:260,easing:'cubic-bezier(.2,.8,.2,1)'});status.textContent='New '+structures[depthStyle].name+' composition generated.'});
- $('quickRegenerate').addEventListener('click',()=>$('regenerate').click());
+ function regenerate(){seed++;const r=n=>{const z=Math.sin((seed+n)*91.713)*43758.545;return z-Math.floor(z)};const shapes={prism:[{top:.06+r(1)*.34,bottom:.52+r(2)*.34},{top:.62+r(3)*.28,bottom:.04+r(4)*.34}],fold:[{top:-.08+r(1)*.62,bottom:.28+r(2)*.58},{top:.56+r(3)*.36,bottom:.08+r(4)*.62}],fan:[{top:.08+r(1)*.28,bottom:.58+r(2)*.32},{top:.18+r(3)*.3,bottom:.02+r(4)*.34}],slice:[{top:-.12+r(1)*.52,bottom:.08+r(2)*.48},{top:.62+r(3)*.44,bottom:.48+r(4)*.42}]};edges=shapes[depthStyle];selectedEdge=0;render();if(!matchMedia('(prefers-reduced-motion: reduce)').matches)stage.animate([{opacity:.72,transform:'scale(.997)'},{opacity:1,transform:'scale(1)'}],{duration:260,easing:'cubic-bezier(.2,.8,.2,1)'});status.textContent='New '+structures[depthStyle].name+' composition generated.'}
+ $('quickRegenerate').addEventListener('click',regenerate);
  $('reset').addEventListener('click',()=>applyStructure(depthStyle));
  function save(blob,name){const a=document.createElement('a'),url=URL.createObjectURL(blob);a.href=url;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(url),1500)}
  function updateExportMeta(){const format=$('format').options[$('format').selectedIndex].text,[w,h]=sizes[$('size').value];$('exportMeta').textContent=`${format} · ${w} × ${h}`}
  $('format').addEventListener('change',updateExportMeta);$('size').addEventListener('change',updateExportMeta);
  $('download').addEventListener('click',async()=>{const size=$('size').value,format=$('format').value,[w,h]=sizes[size],svg=svgString(w,h),base=`sharped-${size}-${w}x${h}`;try{if(format==='svg'){save(new Blob([svg],{type:'image/svg+xml'}),base+'.svg');status.textContent='SVG downloaded.';return}const url=URL.createObjectURL(new Blob([svg],{type:'image/svg+xml'}));const img=new Image();img.onload=()=>{const c=document.createElement('canvas');c.width=w;c.height=h;const context=c.getContext('2d');context.drawImage(img,0,0);URL.revokeObjectURL(url);const mime=format==='jpeg'?'image/jpeg':format==='webp'?'image/webp':'image/png';c.toBlob(blob=>{if(!blob){status.textContent='Export failed. Try PNG or SVG.';return}save(blob,base+'.'+(format==='jpeg'?'jpg':format));status.textContent=`${format.toUpperCase()} downloaded at ${w} × ${h}.`},mime,.94)};img.onerror=()=>{URL.revokeObjectURL(url);status.textContent='Export failed. Try SVG.'};img.src=url}catch{status.textContent='Export failed. Try another format.'}});
- render();
+ paintSliders();render();
 })();
 </script>
 </body>
