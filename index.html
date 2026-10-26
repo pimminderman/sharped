@@ -173,11 +173,14 @@ body.drawer-open .views-panel{left:var(--workspace-center)}
   .drawer-section{border-bottom:1px solid var(--line)}
 }
 @media(max-width:640px){
+  body{overflow:hidden}
   .brand{top:18px;left:18px}
-  .site-content{padding:54px 14px 90px}
-  .views-panel{bottom:20px;width:min(260px,calc(100% - 28px))}
+  .site-content{height:42dvh;margin-right:0!important;padding:54px 14px 10px}
+  .stage:after{box-shadow:inset 0 0 38px 22px var(--bg)}
+  .control-drawer{top:42dvh;width:100%;height:58dvh;padding:18px 18px 96px;transform:none}
+  body.drawer-open .views-panel{left:50%}
+  .views-panel{bottom:18px;width:min(260px,calc(100% - 28px))}
   .command-navigation button{font-size:13px;padding:0 5px}
-  .control-drawer{padding:18px}
   .drawer-content{display:block}
   .palette-row{grid-template-columns:repeat(7,1fr);gap:7px}
   .swatch,.custom{width:30px;height:30px}
