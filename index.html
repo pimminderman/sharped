@@ -115,13 +115,12 @@ button{cursor:pointer}
 .depth-value{color:var(--muted);font:500 12px/1 Geist Mono,ui-monospace,monospace;text-align:right;font-variant-numeric:tabular-nums}
 .export-meta{color:var(--muted);font:500 12px/1 Geist Mono,ui-monospace,monospace;text-align:right;font-variant-numeric:tabular-nums}
 .style-picker{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:4px}
-.line-picker{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:4px;margin-top:8px}
-.style-picker button,.line-picker button{
+.style-picker button{
   min-height:32px;padding:0 7px;border:1px solid var(--line);border-radius:6px;background:transparent;color:var(--ink);
   font:500 12px/1 Geist,system-ui,sans-serif
 }
-.style-picker button:hover,.line-picker button:hover{border-color:var(--coral);background:var(--coral-soft)}
-.style-picker button.selected,.line-picker button.selected{border-color:var(--coral);background:var(--coral-soft);color:#171717;font-weight:600}
+.style-picker button:hover{border-color:var(--coral);background:var(--coral-soft)}
+.style-picker button.selected{border-color:var(--coral);background:var(--coral-soft);color:#171717;font-weight:600}
 .coral-action,.download-button{
   min-height:40px;display:inline-flex;align-items:center;justify-content:center;gap:7px;padding:0 14px;
   border:1px solid var(--coral);border-radius:6px;background:var(--coral-soft);color:#171717;font:600 14px/1 Geist,system-ui,sans-serif
@@ -129,7 +128,6 @@ button{cursor:pointer}
 .coral-action:hover,.download-button:hover{background:var(--coral)}
 .text-action{padding:0;border:0;background:none;color:var(--coral-strong);font:500 14px/1 Geist,system-ui,sans-serif}
 .text-action:hover{text-decoration:underline;text-underline-offset:3px}
-.geometry-divider{height:1px;margin:14px 0 10px;background:var(--line)}
 .export-section{border-bottom:0}
 .export-menu{position:relative}
 .export-menu summary{min-height:40px;display:flex;align-items:center;justify-content:space-between;gap:8px;padding:0 14px;list-style:none;border:1px solid var(--coral);border-radius:6px;background:var(--coral-soft);color:#171717;font:600 14px/1 Geist,system-ui,sans-serif;cursor:pointer}
@@ -152,7 +150,7 @@ button{cursor:pointer}
 .dark .command-navigation button,.dark .quick-create,.dark .theme-toggle{color:#e2e8f0}
 .dark .preview-frame{background:transparent}
 .dark .select-wrap select{background:#1f2937;color:#f8fafc}
-.dark .style-picker button.selected,.dark .line-picker button.selected{color:#171717}
+.dark .style-picker button.selected{color:#171717}
 
 @media(min-width:768px){
   :root{--side-panel-width:36vw;--workspace-center:32vw}
@@ -194,7 +192,7 @@ button{cursor:pointer}
 
   <div class="site-content" id="siteContent">
     <section class="canvas-column" aria-label="Gradient canvas">
-      <div class="preview-frame"><div id="stage" class="stage" tabindex="0" aria-label="Gradient preview. Select a plane, then drag anywhere to move it."><svg id="preview" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 600" preserveAspectRatio="none" role="img" aria-label="Sharp-edged gradient"></svg></div></div>
+      <div class="preview-frame"><div id="stage" class="stage" tabindex="0" aria-label="Gradient preview. Drag near a ridge to reshape it, or drag anywhere to move the active ridge."><svg id="preview" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 600" preserveAspectRatio="none" role="img" aria-label="Sharp-edged gradient"></svg></div></div>
       <span id="status" class="status" role="status" aria-live="polite"></span>
     </section>
   </div>
@@ -216,8 +214,6 @@ button{cursor:pointer}
       <section class="drawer-section" id="geometrySection">
         <div class="section-heading"><h3>Geometry</h3><button type="button" class="text-action" id="reset">Reset</button></div>
         <div class="style-picker" id="stylePicker" role="group" aria-label="Pattern"><button type="button" class="selected" data-style="prism">Quiet</button><button type="button" data-style="fold">Fold</button><button type="button" data-style="fan">Focus</button><button type="button" data-style="slice">Slice</button></div>
-        <div class="geometry-divider" aria-hidden="true"></div>
-        <div class="line-picker" id="linePicker" role="group" aria-label="Selected gradient line"><button type="button" class="selected" data-line="0" aria-pressed="true">Plane 1</button><button type="button" data-line="1" aria-pressed="false">Plane 2</button></div>
       </section>
 
       <section class="drawer-section export-section" id="exportSection">
@@ -266,13 +262,12 @@ button{cursor:pointer}
  const prism=`<polygon points="0,0 ${x(a.top)},0 ${ix},${cy} 0,${Math.round(h*.46)}" fill="#fff" opacity="${(.06+depth*.16).toFixed(2)}"/><polygon points="${x(a.top)},0 ${x(b.top)},0 ${ix},${cy}" fill="${c[0]}" opacity="${(.12+depth*.2).toFixed(2)}"/><polygon points="${x(b.top)},0 ${w},0 ${w},${Math.round(h*.22)} ${ix},${cy}" fill="#fff" opacity="${(.1+depth*.22).toFixed(2)}"/><polygon points="0,${Math.round(h*.46)} ${ix},${cy} ${x(a.bottom)},${h} 0,${h}" fill="${c[1]}" opacity="${(.12+depth*.18).toFixed(2)}"/><polygon points="${ix},${cy} ${w},${Math.round(h*.22)} ${w},${h} ${x(b.bottom)},${h}" fill="#fff" opacity="${(.07+depth*.17).toFixed(2)}"/>`;
  const depthLayers=depthStyle==='prism'?prism:hardBands;
  return `<defs><linearGradient id="g0" x1="${gx1}" y1="${gy1}" x2="${gx2}" y2="${gy2}"><stop offset="0" stop-color="${c[0]}"/><stop offset="1" stop-color="${c[1]}"/></linearGradient><linearGradient id="g1" x1="${gx2}" y1="${gy1}" x2="${gx1}" y2="${gy2}"><stop offset="0" stop-color="${c[3]}"/><stop offset="1" stop-color="${c[2]}"/></linearGradient><linearGradient id="g2" x1="${gx1}" y1="${gy2}" x2="${gx2}" y2="${gy1}"><stop offset="0" stop-color="${c[2]}"/><stop offset="1" stop-color="${c[4]}"/></linearGradient><linearGradient id="depthColour0" x1="${gx1}" y1="${gy1}" x2="${gx2}" y2="${gy2}"><stop offset="0" stop-color="${c[0]}"/><stop offset="1" stop-color="${c[4]}"/></linearGradient><linearGradient id="depthColour1" x1="${gx2}" y1="${gy1}" x2="${gx1}" y2="${gy2}"><stop offset="0" stop-color="${c[1]}"/><stop offset="1" stop-color="${c[4]}"/></linearGradient><linearGradient id="depthLight"><stop offset="0" stop-color="#fff"/><stop offset="1" stop-color="${c[0]}"/></linearGradient><linearGradient id="streamGradient" x1="${gy1}" y1="${gx2}" x2="${gy2}" y2="${gx1}"><stop offset="${Math.max(0,streamAt-18)}%" stop-color="${c[1]}" stop-opacity="0"/><stop offset="${streamAt}%" stop-color="#fff" stop-opacity=".86"/><stop offset="${Math.min(100,streamAt+18)}%" stop-color="${c[4]}" stop-opacity="0"/></linearGradient><filter id="grainFilter" x="0" y="0" width="100%" height="100%"><feTurbulence type="fractalNoise" baseFrequency=".8" numOctaves="3" seed="${seed}"/></filter></defs><polygon points="0,0 ${x(a.top)},0 ${x(a.bottom)},${h} 0,${h}" fill="url(#g0)"/><polygon points="${x(a.top)},0 ${x(b.top)},0 ${x(b.bottom)},${h} ${x(a.bottom)},${h}" fill="url(#g1)"/><polygon points="${x(b.top)},0 ${w},0 ${w},${h} ${x(b.bottom)},${h}" fill="url(#g2)"/>${depthLayers}<rect width="${w}" height="${h}" fill="url(#streamGradient)" opacity="${(stream*.38).toFixed(2)}" pointer-events="none"/><rect width="${w}" height="${h}" filter="url(#grainFilter)" opacity="${(grain*.15).toFixed(3)}" style="mix-blend-mode:soft-light" pointer-events="none"/>${interactive?edges.map(line).join(''):''}`;}
- function render(){preview.innerHTML=gradientMarkup(1000,600,true);document.querySelectorAll('#linePicker button').forEach((b,i)=>{const on=i===selectedEdge;b.classList.toggle('selected',on);b.setAttribute('aria-pressed',on?'true':'false')});document.querySelectorAll('#stylePicker button').forEach(b=>b.classList.toggle('selected',b.dataset.style===depthStyle))}
+ function render(){preview.innerHTML=gradientMarkup(1000,600,true);document.querySelectorAll('#stylePicker button').forEach(b=>b.classList.toggle('selected',b.dataset.style===depthStyle))}
  function svgString(w,h){return `<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}" viewBox="0 0 ${w} ${h}">${gradientMarkup(w,h,false)}</svg>`}
  const paletteRow=$('paletteRow');presets.forEach(([name,hex],index)=>{const active=index===0,b=document.createElement('button');b.type='button';b.className='swatch'+(active?' selected':'');b.title=name;b.setAttribute('aria-label',name);b.setAttribute('aria-pressed',active?'true':'false');b.style.background=`linear-gradient(135deg,${mix(hex,'#fff',.68)},${mix(hex,'#fff',.2)})`;b.dataset.name=name;b.addEventListener('click',()=>select(hex,name));paletteRow.append(b)});const custom=document.createElement('label');custom.className='custom';custom.title='Custom colour';custom.setAttribute('aria-label','Custom colour');custom.innerHTML='<input id="customColor" type="color" value="#7dd3fc" aria-label="Custom colour">';paletteRow.append(custom);$('customColor').addEventListener('input',e=>select(e.target.value,'Custom'));
  function paintSliders(){const thumb=chosen==='White'?'#ffffff':color,ring=chosen==='Ink'?'#ffffff':mix(color,'#ffffff',.82),outline=chosen==='White'?getComputedStyle(document.documentElement).getPropertyValue('--coral-strong').trim():mix(color,'#0f172a',.22);document.querySelectorAll('.depth-row').forEach(row=>{row.style.setProperty('--slider-from',mix(color,'#ffffff',.84));row.style.setProperty('--slider-to',mix(color,'#ffffff',chosen==='Ink'?.34:.08));row.style.setProperty('--slider-thumb',thumb);row.style.setProperty('--slider-thumb-ring',ring);row.style.setProperty('--slider-thumb-outline',outline)})}
  function select(hex,name){color=hex;chosen=name;paletteRow.querySelectorAll('.swatch').forEach(b=>{const active=b.dataset.name===name;b.classList.toggle('selected',active);b.setAttribute('aria-pressed',active?'true':'false')});custom.classList.toggle('selected',name==='Custom');paintSliders();render();status.textContent=name+' gradient selected.'}
  function position(e){const r=stage.getBoundingClientRect();return {x:(e.clientX-r.left)/r.width,y:(e.clientY-r.top)/r.height}}
- $('linePicker').addEventListener('click',e=>{const b=e.target.closest('button[data-line]');if(!b)return;selectedEdge=Number(b.dataset.line);render();status.textContent=`Line ${selectedEdge+1} selected. Drag anywhere on the canvas to move it.`});
  stage.addEventListener('pointerdown',e=>{const p=position(e),hit=e.target?.dataset?.edge;if(hit!==undefined)selectedEdge=Number(hit);const ed=edges[selectedEdge],lineX=ed.top+(ed.bottom-ed.top)*p.y,nearLine=Math.abs(p.x-lineX)<.12;const mode=nearLine&&p.y<.22?'top':nearLine&&p.y>.78?'bottom':'both';drag={index:selectedEdge,startX:p.x,startTop:ed.top,startBottom:ed.bottom,mode};stage.setPointerCapture(e.pointerId);stage.classList.add('dragging');render();status.textContent=mode==='both'?`Moving Line ${selectedEdge+1}. It can cross the other line.`:'Drag sideways to change the line angle.'});
  stage.addEventListener('pointermove',e=>{if(!drag)return;const p=position(e),dx=p.x-drag.startX,ed=edges[drag.index];if(drag.mode!=='bottom')ed.top=clamp(drag.startTop+dx,-.35,1.35);if(drag.mode!=='top')ed.bottom=clamp(drag.startBottom+dx,-.35,1.35);render()});
  const stopDrag=()=>{drag=null;stage.classList.remove('dragging')};stage.addEventListener('pointerup',stopDrag);stage.addEventListener('pointercancel',stopDrag);
