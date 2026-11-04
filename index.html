@@ -43,10 +43,10 @@ button{cursor:pointer}
 .brand h1{margin:0;font:600 18px/1 Geist,system-ui,sans-serif;letter-spacing:-.035em}
 .site-content{height:100dvh;padding:62px 24px 96px;transition:margin-right 900ms var(--drawer-sweep)}
 .canvas-column,.preview-frame,.stage{height:100%;min-height:0}
-.preview-frame{padding:0;border:0;border-radius:0;background:transparent;box-shadow:none}
-.stage{position:relative;overflow:hidden;border-radius:0;touch-action:none;cursor:grab}
+.preview-frame{padding:0;border:0;border-radius:7px;background:transparent;box-shadow:none}
+.stage{position:relative;overflow:hidden;border-radius:7px;touch-action:none;cursor:grab}
 .stage:after{content:"";position:absolute;z-index:3;inset:-1px;pointer-events:none;box-shadow:inset 0 0 72px 42px var(--bg)}
-.stage svg{display:block;width:100%;height:100%}
+.stage svg{display:block;width:100%;height:100%;border-radius:inherit}
 .stage.dragging{cursor:grabbing}
 .stage .edge-hit{stroke:transparent;stroke-width:52;fill:none;cursor:pointer}
 .stage .edge-guide{stroke:var(--coral-strong);stroke-width:1.5;stroke-dasharray:5 8;opacity:0;pointer-events:none;transition:opacity 180ms ease}
@@ -266,8 +266,7 @@ button{cursor:pointer}
  function render(){preview.innerHTML=gradientMarkup(1000,600,true);document.querySelectorAll('#stylePicker button').forEach(b=>b.classList.toggle('selected',b.dataset.style===depthStyle))}
  function svgString(w,h){return `<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}" viewBox="0 0 ${w} ${h}">${gradientMarkup(w,h,false)}</svg>`}
  const paletteRow=$('paletteRow');presets.forEach(([name,hex],index)=>{const active=index===0,b=document.createElement('button');b.type='button';b.className='swatch'+(active?' selected':'');b.title=name;b.setAttribute('aria-label',name);b.setAttribute('aria-pressed',active?'true':'false');b.style.background=`linear-gradient(135deg,${mix(hex,'#fff',.68)},${mix(hex,'#fff',.2)})`;b.dataset.name=name;b.addEventListener('click',()=>select(hex,name));paletteRow.append(b)});const custom=document.createElement('label');custom.className='custom';custom.title='Custom colour';custom.setAttribute('aria-label','Custom colour');custom.innerHTML='<input id="customColor" type="color" value="#7dd3fc" aria-label="Custom colour">';paletteRow.append(custom);$('customColor').addEventListener('input',e=>select(e.target.value,'Custom'));
- function paintSliders(){document.querySelectorAll('.depth-row').forEach(row=>{row.style.setProperty('--slider-from',mix(color,'#ffffff',.84));row.style.setProperty('--slider-to',mix(color,'#ffffff',chosen==='Ink'?.34:.08))})}
- function select(hex,name){color=hex;chosen=name;paletteRow.querySelectorAll('.swatch').forEach(b=>{const active=b.dataset.name===name;b.classList.toggle('selected',active);b.setAttribute('aria-pressed',active?'true':'false')});custom.classList.toggle('selected',name==='Custom');paintSliders();render();status.textContent=name+' gradient selected.'}
+ function select(hex,name){color=hex;chosen=name;paletteRow.querySelectorAll('.swatch').forEach(b=>{const active=b.dataset.name===name;b.classList.toggle('selected',active);b.setAttribute('aria-pressed',active?'true':'false')});custom.classList.toggle('selected',name==='Custom');render();status.textContent=name+' gradient selected.'}
  function position(e){const r=stage.getBoundingClientRect();return {x:(e.clientX-r.left)/r.width,y:(e.clientY-r.top)/r.height}}
  stage.addEventListener('pointerdown',e=>{const p=position(e),hit=e.target?.dataset?.edge;if(hit!==undefined)selectedEdge=Number(hit);const ed=edges[selectedEdge],lineX=ed.top+(ed.bottom-ed.top)*p.y,nearLine=Math.abs(p.x-lineX)<.12;const mode=nearLine&&p.y<.22?'top':nearLine&&p.y>.78?'bottom':'both';drag={index:selectedEdge,startX:p.x,startTop:ed.top,startBottom:ed.bottom,mode};stage.setPointerCapture(e.pointerId);stage.classList.add('dragging');render();status.textContent=mode==='both'?`Moving Line ${selectedEdge+1}. It can cross the other line.`:'Drag sideways to change the line angle.'});
  stage.addEventListener('pointermove',e=>{if(!drag)return;const p=position(e),dx=p.x-drag.startX,ed=edges[drag.index];if(drag.mode!=='bottom')ed.top=clamp(drag.startTop+dx,-.35,1.35);if(drag.mode!=='top')ed.bottom=clamp(drag.startBottom+dx,-.35,1.35);render()});
@@ -283,7 +282,7 @@ button{cursor:pointer}
  function updateExportMeta(){const format=$('format').options[$('format').selectedIndex].text,[w,h]=sizes[$('size').value];$('exportMeta').textContent=`${format} · ${w} × ${h}`}
  $('format').addEventListener('change',updateExportMeta);$('size').addEventListener('change',updateExportMeta);
  $('download').addEventListener('click',async()=>{const size=$('size').value,format=$('format').value,[w,h]=sizes[size],svg=svgString(w,h),base=`sharped-${size}-${w}x${h}`;try{if(format==='svg'){save(new Blob([svg],{type:'image/svg+xml'}),base+'.svg');status.textContent='SVG downloaded.';return}const url=URL.createObjectURL(new Blob([svg],{type:'image/svg+xml'}));const img=new Image();img.onload=()=>{const c=document.createElement('canvas');c.width=w;c.height=h;const context=c.getContext('2d');context.drawImage(img,0,0);URL.revokeObjectURL(url);const mime=format==='jpeg'?'image/jpeg':format==='webp'?'image/webp':'image/png';c.toBlob(blob=>{if(!blob){status.textContent='Export failed. Try PNG or SVG.';return}save(blob,base+'.'+(format==='jpeg'?'jpg':format));status.textContent=`${format.toUpperCase()} downloaded at ${w} × ${h}.`},mime,.94)};img.onerror=()=>{URL.revokeObjectURL(url);status.textContent='Export failed. Try SVG.'};img.src=url}catch{status.textContent='Export failed. Try another format.'}});
- paintSliders();render();
+ render();
 })();
 </script>
 </body>
